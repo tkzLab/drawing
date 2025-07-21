@@ -1,6 +1,6 @@
 import React from 'react';
 import './DrawingSelector.css';
-import { Theme, Drawing } from './types';
+import { Theme, Drawing } from '../types';
 
 interface DrawingSelectorProps {
   step: 'theme' | 'drawing';
@@ -42,7 +42,7 @@ const DrawingSelector: React.FC<DrawingSelectorProps> = ({
         </button>
         <h2>ぬりえをえらんでね</h2>
         <div className="button-grid">
-          {selectedTheme.drawings.map(drawing => (
+          {selectedTheme.drawings.map((drawing: Drawing) => (
             <button
               key={drawing.id}
               className="drawing-button"

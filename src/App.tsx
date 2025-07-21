@@ -3,8 +3,8 @@ import './App.css';
 import ColorPalette from './components/ColorPalette';
 import Toolbar, { Tool } from './components/Toolbar';
 import DrawingSelector from './components/DrawingSelector';
-import { DrawingHandle } from './types'; // Create a new types file
-import { themes, Theme } from './drawingData'; // Create a new data file
+import { DrawingHandle, Theme } from './types'; // Create a new types file
+import { themes } from './drawingData'; // Create a new data file
 
 function App() {
   const [selectedColor, setSelectedColor] = useState('#FF0000');
