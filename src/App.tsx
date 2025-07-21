@@ -3,37 +3,40 @@ import './App.css';
 import ColorPalette from './components/ColorPalette';
 import Toolbar, { Tool } from './components/Toolbar';
 import DrawingSelector from './components/DrawingSelector';
-import Apple from './drawings/Apple';
-import Car from './drawings/Car';
-import Cat from './drawings/Cat';
-
-type DrawingComponentType = 'apple' | 'car' | 'cat';
-
-// Define a type for the ref to expose a clear function
-export interface DrawingHandle {
-  clearCanvas: () => void;
-}
-
-const drawingComponents: Record<DrawingComponentType, React.FC<any>> = {
-  apple: Apple,
-  car: Car,
-  cat: Cat,
-};
+import { DrawingHandle } from './types'; // Create a new types file
+import { themes, Theme } from './drawingData'; // Create a new data file
 
 function App() {
   const [selectedColor, setSelectedColor] = useState('#FF0000');
   const [currentTool, setCurrentTool] = useState<Tool>('bucket');
-  const [selectedDrawing, setSelectedDrawing] = useState<DrawingComponentType>('apple');
+  
+  // State for drawing selection flow
+  const [selectionStep, setSelectionStep] = useState<'theme' | 'drawing'>('theme');
+  const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
+  const [selectedDrawing, setSelectedDrawing] = useState<React.FC<any> | null>(() => themes[0].drawings[0].component);
+  const [selectedDrawingId, setSelectedDrawingId] = useState<string>(() => themes[0].drawings[0].id);
+
+
   const [fills, setFills] = useState<Record<string, string>>({});
   const [history, setHistory] = useState<Record<string, string>[]>([]);
   
   const drawingRef = useRef<DrawingHandle>(null);
 
-  const handleSelectDrawing = (drawing: DrawingComponentType) => {
-    setSelectedDrawing(drawing);
+  const handleThemeSelect = (theme: Theme) => {
+    setSelectedTheme(theme);
+    setSelectionStep('drawing');
+  };
+
+  const handleDrawingSelect = (drawingComponent: React.FC<any>, drawingId: string) => {
+    setSelectedDrawing(() => drawingComponent);
+    setSelectedDrawingId(drawingId);
     setFills({});
     setHistory([]);
-    // The canvas will be cleared by the component itself on key change
+  };
+
+  const handleBackToThemes = () => {
+    setSelectionStep('theme');
+    setSelectedTheme(null);
   };
 
   const handleFill = (partId: string) => {
@@ -55,26 +58,31 @@ function App() {
     drawingRef.current?.clearCanvas();
   };
 
-  const CurrentDrawing = drawingComponents[selectedDrawing];
+  const CurrentDrawingComponent = selectedDrawing;
 
   return (
     <div className="app-container">
       <aside className="drawing-selector">
         <DrawingSelector
-          drawings={Object.keys(drawingComponents) as DrawingComponentType[]}
-          selectedDrawing={selectedDrawing}
-          onSelect={handleSelectDrawing}
+          step={selectionStep}
+          themes={themes}
+          selectedTheme={selectedTheme}
+          onThemeSelect={handleThemeSelect}
+          onDrawingSelect={handleDrawingSelect}
+          onBack={handleBackToThemes}
         />
       </aside>
       <main className="coloring-canvas">
-        <CurrentDrawing
-          ref={drawingRef}
-          key={selectedDrawing} // Add key to force re-mount and clear canvas on change
-          fills={fills}
-          onFill={handleFill}
-          tool={currentTool}
-          color={currentTool === 'eraser' ? '#FFFFFF' : selectedColor}
-        />
+        {CurrentDrawingComponent && (
+          <CurrentDrawingComponent
+            ref={drawingRef}
+            key={selectedDrawingId}
+            fills={fills}
+            onFill={handleFill}
+            tool={currentTool}
+            color={currentTool === 'eraser' ? '#FFFFFF' : selectedColor}
+          />
+        )}
       </main>
       <aside className="color-palette">
         <ColorPalette
