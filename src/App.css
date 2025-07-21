@@ -34,6 +34,12 @@
   height: 90%;
 }
 
+.placeholder-text {
+  font-size: 1.5em;
+  color: #aaa;
+  text-align: center;
+}
+
 .drawing-selector, .color-palette, .toolbar {
   padding: 10px;
   background-color: #f7f7f7;

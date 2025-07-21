@@ -4,8 +4,8 @@ import ColorPalette from './components/ColorPalette';
 import Toolbar, { Tool } from './components/Toolbar';
 import DrawingSelector from './components/DrawingSelector';
 import CustomDrawing from './drawings/CustomDrawing'; // Import the new component
-import { DrawingHandle } from './types';
-import { themes, Theme } from './drawingData';
+import { DrawingHandle, Theme } from './types';
+import { themes } from './drawingData';
 
 function App() {
   const [selectedColor, setSelectedColor] = useState('#FF0000');
@@ -90,16 +90,25 @@ function App() {
         />
       </aside>
       <main className="coloring-canvas">
-        {CurrentDrawingComponent && (
-          <CurrentDrawingComponent
+        {uploadedImage ? (
+          <CustomDrawing
             ref={drawingRef}
-            key={drawingKey}
-            fills={fills}
-            onFill={handleFill}
+            key="custom-drawing"
             tool={currentTool}
             color={currentTool === 'eraser' ? '#FFFFFF' : selectedColor}
-            imageUrl={uploadedImage} // Pass imageUrl to CustomDrawing
+            imageUrl={uploadedImage}
           />
+        ) : selectedDrawing ? (
+          React.createElement(selectedDrawing, {
+            ref: drawingRef,
+            key: selectedDrawingId,
+            fills: fills,
+            onFill: handleFill,
+            tool: currentTool,
+            color: currentTool === 'eraser' ? '#FFFFFF' : selectedColor,
+          })
+        ) : (
+          <div className="placeholder-text">ぬりえをえらんでね！</div>
         )}
       </main>
       <aside className="color-palette">
