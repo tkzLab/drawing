@@ -59,7 +59,15 @@ const Cat: React.FC<DrawingProps> = forwardRef<DrawingHandle, DrawingProps>(
         </svg>
         <canvas
           ref={canvasRef}
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', touchAction: 'none' }}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            touchAction: 'none',
+            pointerEvents: tool === 'bucket' ? 'none' : 'auto',
+          }}
           onMouseDown={startDrawing}
           onMouseMove={draw}
           onMouseUp={stopDrawing}
