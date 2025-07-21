@@ -1,0 +1,21 @@
+.tool-button {
+  padding: 15px 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #fff;
+  background-color: #4CAF50; /* A friendly green */
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.tool-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.tool-button:active {
+  transform: translateY(0);
+}

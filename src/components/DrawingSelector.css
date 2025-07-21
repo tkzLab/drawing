@@ -1,0 +1,25 @@
+.drawing-button {
+  padding: 20px 10px;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.drawing-button:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.05);
+}
+
+.drawing-button.selected {
+  background-color: #FFD700; /* A cheerful yellow for selection */
+  color: #fff;
+  border-color: #FFD700;
+  transform: scale(1.05);
+}
