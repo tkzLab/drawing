@@ -8,18 +8,36 @@ export const useDrawing = (
   const [isDrawing, setIsDrawing] = useState(false);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
 
-  useEffect(() => {
+  // Function to set canvas dimensions
+  const setCanvasDimensions = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const context = canvas.getContext('2d');
-    if (!context) return;
+    const { width, height } = canvas.getBoundingClientRect();
+    canvas.width = width;
+    canvas.height = height;
     
-    context.lineCap = 'round';
-    context.lineJoin = 'round';
-    context.lineWidth = 10; // Medium brush size
-    contextRef.current = context;
-  }, [canvasRef]);
+    // Re-apply context settings after resize
+    const context = canvas.getContext('2d');
+    if (context) {
+      context.lineCap = 'round';
+      context.lineJoin = 'round';
+      context.lineWidth = 10;
+      context.strokeStyle = color;
+      context.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over';
+      contextRef.current = context;
+    }
+  };
 
+  // Effect to set initial dimensions and handle resize
+  useEffect(() => {
+    setCanvasDimensions();
+    window.addEventListener('resize', setCanvasDimensions);
+    return () => {
+      window.removeEventListener('resize', setCanvasDimensions);
+    };
+  }, [canvasRef]); // Run only when canvas ref changes
+
+  // Effect to update drawing style when color or tool changes
   useEffect(() => {
     if (contextRef.current) {
       contextRef.current.strokeStyle = color;
@@ -27,31 +45,43 @@ export const useDrawing = (
     }
   }, [color, tool]);
 
-  const getCoords = (event: MouseEvent | TouchEvent): { x: number, y: number } => {
+  const getCoords = (event: MouseEvent | TouchEvent): { x: number, y: number } | null => {
     const canvas = canvasRef.current;
-    if (!canvas) return { x: 0, y: 0 };
+    if (!canvas) return null;
     const rect = canvas.getBoundingClientRect();
+    
+    let clientX, clientY;
     if (event instanceof MouseEvent) {
-      return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+      clientX = event.clientX;
+      clientY = event.clientY;
+    } else if (event.touches[0]) {
+      clientX = event.touches[0].clientX;
+      clientY = event.touches[0].clientY;
+    } else {
+      return null;
     }
-    if (event.touches[0]) {
-      return { x: event.touches[0].clientX - rect.left, y: event.touches[0].clientY - rect.top };
-    }
-    return { x: 0, y: 0 };
+    
+    return { 
+      x: clientX - rect.left, 
+      y: clientY - rect.top 
+    };
   };
 
   const startDrawing = (event: React.MouseEvent | React.TouchEvent) => {
-    if (tool === 'brush' || tool === 'eraser') {
-      const { x, y } = getCoords(event.nativeEvent);
-      contextRef.current?.beginPath();
-      contextRef.current?.moveTo(x, y);
-      setIsDrawing(true);
-    }
+    if (tool !== 'brush' && tool !== 'eraser') return;
+    const coords = getCoords(event.nativeEvent);
+    if (!coords) return;
+    const { x, y } = coords;
+    contextRef.current?.beginPath();
+    contextRef.current?.moveTo(x, y);
+    setIsDrawing(true);
   };
 
   const draw = (event: React.MouseEvent | React.TouchEvent) => {
     if (!isDrawing) return;
-    const { x, y } = getCoords(event.nativeEvent);
+    const coords = getCoords(event.nativeEvent);
+    if (!coords) return;
+    const { x, y } = coords;
     contextRef.current?.lineTo(x, y);
     contextRef.current?.stroke();
   };

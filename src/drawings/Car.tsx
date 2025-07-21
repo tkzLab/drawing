@@ -57,8 +57,6 @@ const Car: React.FC<DrawingProps> = forwardRef<DrawingHandle, DrawingProps>(
         </svg>
         <canvas
           ref={canvasRef}
-          width="800"
-          height="600"
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', touchAction: 'none' }}
           onMouseDown={startDrawing}
           onMouseMove={draw}
