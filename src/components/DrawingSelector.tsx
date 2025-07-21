@@ -1,13 +1,15 @@
 import React from 'react';
 import './DrawingSelector.css';
 import { Theme, Drawing } from '../types';
+import ImageUploadButton from './ImageUploadButton'; // Import the new component
 
 interface DrawingSelectorProps {
-  step: 'theme' | 'drawing';
+  step: 'theme' | 'drawing' | 'custom';
   themes: Theme[];
   selectedTheme: Theme | null;
   onThemeSelect: (theme: Theme) => void;
   onDrawingSelect: (drawingComponent: React.FC<any>, drawingId: string) => void;
+  onImageUpload: (dataUrl: string) => void;
   onBack: () => void;
 }
 
@@ -17,6 +19,7 @@ const DrawingSelector: React.FC<DrawingSelectorProps> = ({
   selectedTheme,
   onThemeSelect,
   onDrawingSelect,
+  onImageUpload,
   onBack,
 }) => {
   if (step === 'theme') {
@@ -30,6 +33,8 @@ const DrawingSelector: React.FC<DrawingSelectorProps> = ({
             </button>
           ))}
         </div>
+        <hr className="divider" />
+        <ImageUploadButton onImageUpload={onImageUpload} />
       </div>
     );
   }
@@ -56,7 +61,19 @@ const DrawingSelector: React.FC<DrawingSelectorProps> = ({
     );
   }
 
-  return null; // Should not happen
+  if (step === 'custom') {
+     return (
+      <div className="selector-container">
+        <button className="back-button" onClick={onBack}>
+          ぬりえをえらびなおす
+        </button>
+        <h2>じぶんのぬりえ</h2>
+        <p className="custom-drawing-text">ブラシとけしゴムで、じゆうにぬってね！</p>
+      </div>
+    );
+  }
+
+  return null;
 };
 
 export default DrawingSelector;

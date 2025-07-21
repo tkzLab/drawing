@@ -3,19 +3,19 @@ import './App.css';
 import ColorPalette from './components/ColorPalette';
 import Toolbar, { Tool } from './components/Toolbar';
 import DrawingSelector from './components/DrawingSelector';
-import { DrawingHandle, Theme } from './types'; // Create a new types file
-import { themes } from './drawingData'; // Create a new data file
+import CustomDrawing from './drawings/CustomDrawing'; // Import the new component
+import { DrawingHandle } from './types';
+import { themes, Theme } from './drawingData';
 
 function App() {
   const [selectedColor, setSelectedColor] = useState('#FF0000');
-  const [currentTool, setCurrentTool] = useState<Tool>('bucket');
+  const [currentTool, setCurrentTool] = useState<Tool>('brush'); // Default to brush now
   
-  // State for drawing selection flow
-  const [selectionStep, setSelectionStep] = useState<'theme' | 'drawing'>('theme');
+  const [selectionStep, setSelectionStep] = useState<'theme' | 'drawing' | 'custom'>('theme');
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
-  const [selectedDrawing, setSelectedDrawing] = useState<React.FC<any> | null>(() => themes[0].drawings[0].component);
-  const [selectedDrawingId, setSelectedDrawingId] = useState<string>(() => themes[0].drawings[0].id);
-
+  const [selectedDrawing, setSelectedDrawing] = useState<React.FC<any> | null>(null);
+  const [selectedDrawingId, setSelectedDrawingId] = useState<string | null>(null);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
   const [fills, setFills] = useState<Record<string, string>>({});
   const [history, setHistory] = useState<Record<string, string>[]>([]);
@@ -28,8 +28,18 @@ function App() {
   };
 
   const handleDrawingSelect = (drawingComponent: React.FC<any>, drawingId: string) => {
+    setUploadedImage(null); // Clear any uploaded image
     setSelectedDrawing(() => drawingComponent);
     setSelectedDrawingId(drawingId);
+    setCurrentTool('bucket'); // Default to bucket for pre-made drawings
+    setFills({});
+    setHistory([]);
+  };
+
+  const handleImageUpload = (dataUrl: string) => {
+    setUploadedImage(dataUrl);
+    setSelectionStep('custom');
+    setCurrentTool('brush'); // Force brush tool for custom drawings
     setFills({});
     setHistory([]);
   };
@@ -37,15 +47,19 @@ function App() {
   const handleBackToThemes = () => {
     setSelectionStep('theme');
     setSelectedTheme(null);
+    setUploadedImage(null); // Clear uploaded image
+    setSelectedDrawing(null);
+    setSelectedDrawingId(null);
   };
 
   const handleFill = (partId: string) => {
-    if (currentTool !== 'bucket') return;
+    if (currentTool !== 'bucket' || uploadedImage) return;
     setHistory(prevHistory => [...prevHistory, fills]);
     setFills(prevFills => ({ ...prevFills, [partId]: selectedColor }));
   };
 
   const handleUndo = () => {
+    if (uploadedImage) return; // Undo is disabled for custom drawings for now
     if (history.length === 0) return;
     const lastFills = history[history.length - 1];
     setFills(lastFills);
@@ -58,7 +72,9 @@ function App() {
     drawingRef.current?.clearCanvas();
   };
 
-  const CurrentDrawingComponent = selectedDrawing;
+  const isBucketDisabled = !!uploadedImage;
+  const CurrentDrawingComponent = uploadedImage ? CustomDrawing : selectedDrawing;
+  const drawingKey = uploadedImage ? 'custom-drawing' : selectedDrawingId;
 
   return (
     <div className="app-container">
@@ -69,6 +85,7 @@ function App() {
           selectedTheme={selectedTheme}
           onThemeSelect={handleThemeSelect}
           onDrawingSelect={handleDrawingSelect}
+          onImageUpload={handleImageUpload}
           onBack={handleBackToThemes}
         />
       </aside>
@@ -76,11 +93,12 @@ function App() {
         {CurrentDrawingComponent && (
           <CurrentDrawingComponent
             ref={drawingRef}
-            key={selectedDrawingId}
+            key={drawingKey}
             fills={fills}
             onFill={handleFill}
             tool={currentTool}
             color={currentTool === 'eraser' ? '#FFFFFF' : selectedColor}
+            imageUrl={uploadedImage} // Pass imageUrl to CustomDrawing
           />
         )}
       </main>
@@ -96,6 +114,8 @@ function App() {
           onToolChange={setCurrentTool}
           onUndo={handleUndo}
           onReset={handleReset}
+          isBucketDisabled={isBucketDisabled}
+          isUndoDisabled={isBucketDisabled}
         />
       </footer>
     </div>

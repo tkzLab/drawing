@@ -1,0 +1,19 @@
+.upload-button {
+  width: 100%;
+  padding: 15px 10px;
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #fff;
+  background-color: #28a745; /* A vibrant green */
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s, transform 0.2s;
+  margin-top: 10px;
+}
+
+.upload-button:hover {
+  background-color: #218838;
+  transform: scale(1.02);
+}

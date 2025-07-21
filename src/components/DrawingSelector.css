@@ -61,3 +61,15 @@
 .back-button:hover {
   background-color: #5a6268;
 }
+
+.divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 15px 0;
+}
+
+.custom-drawing-text {
+  text-align: center;
+  font-size: 0.9em;
+  color: #555;
+}

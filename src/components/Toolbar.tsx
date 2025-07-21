@@ -8,15 +8,25 @@ interface ToolbarProps {
   onToolChange: (tool: Tool) => void;
   onUndo: () => void;
   onReset: () => void;
+  isBucketDisabled?: boolean;
+  isUndoDisabled?: boolean;
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({ currentTool, onToolChange, onUndo, onReset }) => {
+const Toolbar: React.FC<ToolbarProps> = ({
+  currentTool,
+  onToolChange,
+  onUndo,
+  onReset,
+  isBucketDisabled = false,
+  isUndoDisabled = false,
+}) => {
   return (
     <div className="toolbar-container">
       <div className="tool-selection">
         <button
           className={`tool-button ${currentTool === 'bucket' ? 'active' : ''}`}
           onClick={() => onToolChange('bucket')}
+          disabled={isBucketDisabled}
         >
           バケツ
         </button>
@@ -34,8 +44,12 @@ const Toolbar: React.FC<ToolbarProps> = ({ currentTool, onToolChange, onUndo, on
         </button>
       </div>
       <div className="action-buttons">
-        <button className="action-button" onClick={onUndo}>やりなおし</button>
-        <button className="action-button" onClick={onReset}>ぜんぶけす</button>
+        <button className="action-button" onClick={onUndo} disabled={isUndoDisabled}>
+          やりなおし
+        </button>
+        <button className="action-button" onClick={onReset}>
+          ぜんぶけす
+        </button>
       </div>
     </div>
   );
