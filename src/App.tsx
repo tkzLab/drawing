@@ -73,8 +73,33 @@ function App() {
   };
 
   const isBucketDisabled = !!uploadedImage;
-  const CurrentDrawingComponent = uploadedImage ? CustomDrawing : selectedDrawing;
-  const drawingKey = uploadedImage ? 'custom-drawing' : selectedDrawingId;
+
+  let drawingContent;
+  if (uploadedImage) {
+    drawingContent = (
+      <CustomDrawing
+        ref={drawingRef}
+        key="custom-drawing"
+        tool={currentTool}
+        color={currentTool === 'eraser' ? '#FFFFFF' : selectedColor}
+        imageUrl={uploadedImage}
+      />
+    );
+  } else if (selectedDrawing) {
+    const DrawingComponent = selectedDrawing;
+    drawingContent = (
+      <DrawingComponent
+        ref={drawingRef}
+        key={selectedDrawingId}
+        fills={fills}
+        onFill={handleFill}
+        tool={currentTool}
+        color={currentTool === 'eraser' ? '#FFFFFF' : selectedColor}
+      />
+    );
+  } else {
+    drawingContent = <div className="placeholder-text">ぬりえをえらんでね！</div>;
+  }
 
   return (
     <div className="app-container">
@@ -90,26 +115,7 @@ function App() {
         />
       </aside>
       <main className="coloring-canvas">
-        {uploadedImage ? (
-          <CustomDrawing
-            ref={drawingRef}
-            key="custom-drawing"
-            tool={currentTool}
-            color={currentTool === 'eraser' ? '#FFFFFF' : selectedColor}
-            imageUrl={uploadedImage}
-          />
-        ) : selectedDrawing ? (
-          React.createElement(selectedDrawing, {
-            ref: drawingRef,
-            key: selectedDrawingId,
-            fills: fills,
-            onFill: handleFill,
-            tool: currentTool,
-            color: currentTool === 'eraser' ? '#FFFFFF' : selectedColor,
-          })
-        ) : (
-          <div className="placeholder-text">ぬりえをえらんでね！</div>
-        )}
+        {drawingContent}
       </main>
       <aside className="color-palette">
         <ColorPalette
