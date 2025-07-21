@@ -1,4 +1,4 @@
-import React, { useRef, useImperativeHandle, forwardRef } from 'react';
+import { useRef, useImperativeHandle, forwardRef } from 'react';
 import { useDrawing } from '../hooks/useDrawing';
 import { DrawingHandle } from '../types';
 import { Tool } from '../components/Toolbar';
