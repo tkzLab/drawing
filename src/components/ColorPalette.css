@@ -1,11 +1,12 @@
 .color-swatch {
-  width: 60px;
-  height: 60px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   border: 3px solid #fff;
   cursor: pointer;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  flex-shrink: 0; /* Prevent shrinking in mobile's flex layout */
 }
 
 .color-swatch:hover {
@@ -16,4 +17,12 @@
   border-color: #333;
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
   transform: scale(1.15);
+}
+
+/* Styles for larger screens */
+@media (min-width: 768px) and (orientation: landscape) {
+  .color-swatch {
+    width: 60px;
+    height: 60px;
+  }
 }

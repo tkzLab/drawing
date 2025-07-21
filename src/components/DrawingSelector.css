@@ -1,15 +1,15 @@
 .drawing-button {
-  padding: 20px 10px;
-  font-size: 1.5em;
+  padding: 10px 20px;
+  font-size: 1em;
   font-weight: bold;
   color: #333;
   background-color: #fff;
   border: 2px solid #ddd;
   border-radius: 10px;
   cursor: pointer;
-  width: 100%;
   text-align: center;
   transition: background-color 0.2s, color 0.2s, transform 0.2s;
+  flex-shrink: 0; /* Prevent shrinking in mobile's flex layout */
 }
 
 .drawing-button:hover {
@@ -18,8 +18,17 @@
 }
 
 .drawing-button.selected {
-  background-color: #FFD700; /* A cheerful yellow for selection */
+  background-color: #FFD700;
   color: #fff;
   border-color: #FFD700;
   transform: scale(1.05);
+}
+
+/* Styles for larger screens */
+@media (min-width: 768px) and (orientation: landscape) {
+  .drawing-button {
+    width: 100%;
+    padding: 20px 10px;
+    font-size: 1.5em;
+  }
 }

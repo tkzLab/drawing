@@ -3,34 +3,35 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
   width: 100%;
 }
 
 .tool-selection, .action-buttons {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 15px;
+  gap: 10px;
 }
 
 .tool-button, .action-button {
-  padding: 10px 20px;
-  font-size: 1em;
+  padding: 10px 15px;
+  font-size: 0.9em;
   font-weight: bold;
   color: #fff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s, transform 0.2s;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
 .tool-button {
-  background-color: #007bff; /* Blue for tools */
+  background-color: #007bff;
 }
 
 .action-button {
-  background-color: #4CAF50; /* Green for actions */
+  background-color: #4CAF50;
 }
 
 .tool-button:hover, .action-button:hover {
@@ -38,7 +39,21 @@
 }
 
 .tool-button.active {
-  background-color: #0056b3; /* Darker blue for active tool */
+  background-color: #0056b3;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Styles for larger screens */
+@media (min-width: 768px) and (orientation: landscape) {
+  .toolbar-container {
+    gap: 20px;
+  }
+  .tool-selection, .action-buttons {
+    gap: 15px;
+  }
+  .tool-button, .action-button {
+    padding: 10px 20px;
+    font-size: 1em;
+  }
 }
