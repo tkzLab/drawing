@@ -10,7 +10,7 @@ interface DrawingProps {
   color: string;
 }
 
-const Apple: React.FC<DrawingProps> = forwardRef<DrawingHandle, DrawingProps>(
+const Apple = forwardRef<DrawingHandle, DrawingProps>(
   ({ fills, onFill, tool, color }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { startDrawing, draw, stopDrawing } = useDrawing(canvasRef, color, tool as 'brush' | 'eraser');

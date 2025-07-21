@@ -9,7 +9,7 @@ interface CustomDrawingProps {
   color: string;
 }
 
-const CustomDrawing: React.FC<CustomDrawingProps> = forwardRef<DrawingHandle, CustomDrawingProps>(
+const CustomDrawing = forwardRef<DrawingHandle, CustomDrawingProps>(
   ({ imageUrl, tool, color }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { startDrawing, draw, stopDrawing } = useDrawing(canvasRef, color, tool as 'brush' | 'eraser');

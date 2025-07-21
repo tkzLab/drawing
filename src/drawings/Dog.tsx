@@ -10,7 +10,7 @@ interface DrawingProps {
   color: string;
 }
 
-const Dog: React.FC<DrawingProps> = forwardRef<DrawingHandle, DrawingProps>(
+const Dog = forwardRef<DrawingHandle, DrawingProps>(
   ({ fills, onFill, tool, color }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { startDrawing, draw, stopDrawing } = useDrawing(canvasRef, color, tool as 'brush' | 'eraser');
