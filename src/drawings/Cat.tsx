@@ -67,6 +67,7 @@ const Cat = forwardRef<DrawingHandle, DrawingProps>(
             height: '100%',
             touchAction: 'none',
             pointerEvents: tool === 'bucket' ? 'none' : 'auto',
+            mixBlendMode: 'multiply',
           }}
           onMouseDown={startDrawing}
           onMouseMove={draw}

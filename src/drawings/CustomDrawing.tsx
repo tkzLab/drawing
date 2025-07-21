@@ -40,6 +40,7 @@ const CustomDrawing = forwardRef<DrawingHandle, CustomDrawingProps>(
             width: '100%',
             height: '100%',
             touchAction: 'none',
+            mixBlendMode: 'multiply',
             // The canvas should not block clicks, but for custom drawings, only brush/eraser are used,
             // so this is not strictly necessary as the bucket tool will be disabled.
           }}
