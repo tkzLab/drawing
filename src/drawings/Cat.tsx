@@ -1,7 +1,7 @@
-import { useRef, useImperativeHandle, forwardRef } from 'react';
-import { useDrawing } from '../hooks/useDrawing';
+import { forwardRef } from 'react';
 import { DrawingHandle } from '../types';
 import { Tool } from '../components/Toolbar';
+import DrawingCanvas from '../components/DrawingCanvas'; // Import the new component
 
 interface DrawingProps {
   fills: Record<string, string>;
@@ -12,19 +12,6 @@ interface DrawingProps {
 
 const Cat = forwardRef<DrawingHandle, DrawingProps>(
   ({ fills, onFill, tool, color }, ref) => {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const { startDrawing, draw, stopDrawing } = useDrawing(canvasRef, color, tool as 'brush' | 'eraser');
-
-    useImperativeHandle(ref, () => ({
-      clearCanvas: () => {
-        const canvas = canvasRef.current;
-        const ctx = canvas?.getContext('2d');
-        if (ctx && canvas) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-      },
-    }));
-
     const handlePartClick = (partId: string) => {
       if (tool === 'bucket') {
         onFill(partId);
@@ -34,6 +21,7 @@ const Cat = forwardRef<DrawingHandle, DrawingProps>(
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         <svg viewBox="0 0 200 200" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+          {/* SVG paths for the cat drawing */}
           <path
             d="M 50,150 C 50,100 150,100 150,150 C 150,180 50,180 50,150 Z"
             stroke="#000" strokeWidth="3" fill={fills['cat-head'] || '#FFF'}
@@ -57,26 +45,7 @@ const Cat = forwardRef<DrawingHandle, DrawingProps>(
           <path d="M 130 145 Q 150 140 170 145" stroke="#000" strokeWidth="1" fill="none" />
           <path d="M 130 150 Q 150 150 170 150" stroke="#000" strokeWidth="1" fill="none" />
         </svg>
-        <canvas
-          ref={canvasRef}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            touchAction: 'none',
-            pointerEvents: tool === 'bucket' ? 'none' : 'auto',
-            mixBlendMode: 'multiply',
-          }}
-          onMouseDown={startDrawing}
-          onMouseMove={draw}
-          onMouseUp={stopDrawing}
-          onMouseLeave={stopDrawing}
-          onTouchStart={startDrawing}
-          onTouchMove={draw}
-          onTouchEnd={stopDrawing}
-        />
+        <DrawingCanvas ref={ref} tool={tool} color={color} />
       </div>
     );
   }

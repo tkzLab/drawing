@@ -41,9 +41,14 @@ export const useDrawing = (
   useEffect(() => {
     if (contextRef.current) {
       contextRef.current.strokeStyle = color;
+    }
+  }, [color]);
+
+  useEffect(() => {
+    if (contextRef.current) {
       contextRef.current.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over';
     }
-  }, [color, tool]);
+  }, [tool]);
 
   const getCoords = (event: MouseEvent | TouchEvent): { x: number, y: number } | null => {
     const canvas = canvasRef.current;

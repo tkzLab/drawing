@@ -47,6 +47,8 @@
 /* Styles for larger screens */
 @media (min-width: 768px) and (orientation: landscape) {
   .toolbar-container {
+    flex-direction: row; /* ボタンを横並びにする */
+    justify-content: center; /* 中央揃え */
     gap: 20px;
   }
   .tool-selection, .action-buttons {

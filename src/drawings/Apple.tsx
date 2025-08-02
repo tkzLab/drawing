@@ -1,7 +1,7 @@
-import { useRef, useImperativeHandle, forwardRef } from 'react';
-import { useDrawing } from '../hooks/useDrawing';
+import { forwardRef } from 'react';
 import { DrawingHandle } from '../types';
 import { Tool } from '../components/Toolbar';
+import DrawingCanvas from '../components/DrawingCanvas';
 
 interface DrawingProps {
   fills: Record<string, string>;
@@ -12,19 +12,6 @@ interface DrawingProps {
 
 const Apple = forwardRef<DrawingHandle, DrawingProps>(
   ({ fills, onFill, tool, color }, ref) => {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const { startDrawing, draw, stopDrawing } = useDrawing(canvasRef, color, tool as 'brush' | 'eraser');
-
-    useImperativeHandle(ref, () => ({
-      clearCanvas: () => {
-        const canvas = canvasRef.current;
-        const ctx = canvas?.getContext('2d');
-        if (ctx && canvas) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-      },
-    }));
-
     const handlePartClick = (partId: string) => {
       if (tool === 'bucket') {
         onFill(partId);
@@ -34,40 +21,19 @@ const Apple = forwardRef<DrawingHandle, DrawingProps>(
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         <svg viewBox="0 0 200 200" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-          <g transform="translate(0, -5)">
-            <path
-              d="M 100,60 C 140,60 160,90 160,120 C 160,170 130,190 100,190 C 70,190 40,170 40,120 C 40,90 60,60 100,60 Z"
-              stroke="#000" strokeWidth="3" fill={fills['apple-body'] || '#FFF'}
-              onClick={() => handlePartClick('apple-body')} cursor={tool === 'bucket' ? 'pointer' : 'default'}
-            />
-            <path
-              d="M 110,60 Q 130,40 140,20 C 130,40 110,50 110,60"
-              stroke="#000" strokeWidth="3" fill={fills['apple-leaf'] || '#FFF'}
-              onClick={() => handlePartClick('apple-leaf')} cursor={tool === 'bucket' ? 'pointer' : 'default'}
-            />
-            <path d="M 100,65 Q 100,45 105,30" stroke="#000" strokeWidth="3" fill="none" strokeLinecap="round" />
-          </g>
+          {/* Apple body */}
+          <path
+            d="M 100,100 C 50,100 50,150 100,150 C 150,150 150,100 100,100"
+            stroke="#000" strokeWidth="3" fill={fills['apple-body'] || '#FFF'}
+            onClick={() => handlePartClick('apple-body')} cursor={tool === 'bucket' ? 'pointer' : 'default'}
+          />
+          <path
+            d="M 100,100 C 100,80 110,80 110,100"
+            stroke="#000" strokeWidth="3" fill={fills['apple-leaf'] || '#FFF'}
+            onClick={() => handlePartClick('apple-leaf')} cursor={tool === 'bucket' ? 'pointer' : 'default'}
+          />
         </svg>
-        <canvas
-          ref={canvasRef}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            touchAction: 'none',
-            pointerEvents: tool === 'bucket' ? 'none' : 'auto',
-            mixBlendMode: 'multiply',
-          }}
-          onMouseDown={startDrawing}
-          onMouseMove={draw}
-          onMouseUp={stopDrawing}
-          onMouseLeave={stopDrawing}
-          onTouchStart={startDrawing}
-          onTouchMove={draw}
-          onTouchEnd={stopDrawing}
-        />
+        <DrawingCanvas ref={ref} tool={tool} color={color} />
       </div>
     );
   }

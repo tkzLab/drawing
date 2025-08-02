@@ -59,11 +59,12 @@
 @media (min-width: 768px) and (orientation: landscape) {
   .app-container {
     display: grid;
+    /* ツールバーを下に配置し、描画エリアの高さを確保する新しいレイアウト */
     grid-template-columns: 150px 1fr 120px;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: 1fr auto; /* 描画エリア(1fr)とツールバー(auto) */
     grid-template-areas:
       "selector canvas palette"
-      "selector toolbar palette";
+      "toolbar toolbar toolbar"; /* ツールバーを一番下に配置 */
     max-width: 1366px;
     max-height: 1024px;
     margin: auto;
@@ -73,6 +74,7 @@
   }
 
   .coloring-canvas {
+    grid-area: canvas; /* 明示的にエリアを指定 */
     padding: 20px;
     border-left: 1px solid #e0e0e0;
     border-right: 1px solid #e0e0e0;
@@ -88,25 +90,34 @@
     height: 100%;
   }
 
-  .drawing-selector, .color-palette, .toolbar {
+  .drawing-selector {
+    grid-area: selector;
     flex-direction: column;
     border: none;
     box-shadow: none;
     overflow-y: auto;
     overflow-x: hidden;
     gap: 15px;
-  }
-
-  .drawing-selector {
     padding: 20px;
   }
 
   .color-palette {
+    grid-area: palette;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Explicitly align items to the top */
     align-items: center;
-    padding: 20px;
+    border: none;
+    box-shadow: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    gap: 15px;
+    padding: 15px 20px; /* Adjust padding for better spacing */
   }
 
   .toolbar {
+    grid-area: toolbar; /* 明示的にエリアを指定 */
+    border-top: 1px solid #e0e0e0; /* 上のエリアとの境界線 */
     padding: 10px 20px;
   }
 }

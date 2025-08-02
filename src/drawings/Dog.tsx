@@ -1,7 +1,7 @@
-import { useRef, useImperativeHandle, forwardRef } from 'react';
-import { useDrawing } from '../hooks/useDrawing';
+import { forwardRef } from 'react';
 import { DrawingHandle } from '../types';
 import { Tool } from '../components/Toolbar';
+import DrawingCanvas from '../components/DrawingCanvas';
 
 interface DrawingProps {
   fills: Record<string, string>;
@@ -12,19 +12,6 @@ interface DrawingProps {
 
 const Dog = forwardRef<DrawingHandle, DrawingProps>(
   ({ fills, onFill, tool, color }, ref) => {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const { startDrawing, draw, stopDrawing } = useDrawing(canvasRef, color, tool as 'brush' | 'eraser');
-
-    useImperativeHandle(ref, () => ({
-      clearCanvas: () => {
-        const canvas = canvasRef.current;
-        const ctx = canvas?.getContext('2d');
-        if (ctx && canvas) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-      },
-    }));
-
     const handlePartClick = (partId: string) => {
       if (tool === 'bucket') {
         onFill(partId);
@@ -58,26 +45,7 @@ const Dog = forwardRef<DrawingHandle, DrawingProps>(
           {/* Nose */}
           <path d="M100,120 C90,135 110,135 100,120 Z" fill="#000" />
         </svg>
-        <canvas
-          ref={canvasRef}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            touchAction: 'none',
-            pointerEvents: tool === 'bucket' ? 'none' : 'auto',
-            mixBlendMode: 'multiply',
-          }}
-          onMouseDown={startDrawing}
-          onMouseMove={draw}
-          onMouseUp={stopDrawing}
-          onMouseLeave={stopDrawing}
-          onTouchStart={startDrawing}
-          onTouchMove={draw}
-          onTouchEnd={stopDrawing}
-        />
+        <DrawingCanvas ref={ref} tool={tool} color={color} />
       </div>
     );
   }
