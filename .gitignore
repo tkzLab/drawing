@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Scratch / working files
+tmp/
+
+# Coloring artwork — provide your own commercial-use / original / AI-generated
+# PNGs locally. Kept out of version control to avoid committing third-party art.
+public/coloring/

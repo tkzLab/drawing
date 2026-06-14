@@ -1,21 +1,26 @@
 // src/types.ts
 
-// This interface allows parent components to call functions on child components,
-// like clearing the canvas.
-export interface DrawingHandle {
-  clearCanvas: () => void;
-}
+// The tools available in the toolbar.
+export type Tool = 'bucket' | 'brush' | 'eraser';
 
-// Defines the structure for a single drawing
-export interface Drawing {
+// A line-art picture the child can color. The PNG provides both the visible
+// outline and (via its black lines) the boundaries for the bucket flood-fill,
+// so adding a character is just dropping in an image + one entry here.
+export interface Artwork {
   id: string;
   name: string;
-  component: React.FC<any>; // The actual React component for the drawing
+  image: string; // URL of a black-line-on-white PNG
 }
 
-// Defines the structure for a theme, which contains multiple drawings
+// A theme groups several artworks together.
 export interface Theme {
   id: string;
   name: string;
-  drawings: Drawing[];
+  artworks: Artwork[];
+}
+
+// Imperative actions a screen can trigger on the coloring canvas.
+export interface CanvasHandle {
+  undo: () => void;
+  clear: () => void;
 }

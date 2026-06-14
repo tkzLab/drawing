@@ -1,53 +1,40 @@
 import React from 'react';
 import './Toolbar.css';
+import { Tool } from '../types';
 
-export type Tool = 'bucket' | 'brush' | 'eraser';
+const TOOL_LABELS: Record<Tool, string> = {
+  bucket: 'バケツ',
+  brush: 'ペン',
+  eraser: 'けしゴム',
+};
 
 interface ToolbarProps {
+  tools: Tool[];
   currentTool: Tool;
   onToolChange: (tool: Tool) => void;
   onUndo: () => void;
-  onReset: () => void;
-  isBucketDisabled?: boolean;
-  isUndoDisabled?: boolean;
+  onClear: () => void;
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({
-  currentTool,
-  onToolChange,
-  onUndo,
-  onReset,
-  isBucketDisabled = false,
-  isUndoDisabled = false,
-}) => {
+const Toolbar: React.FC<ToolbarProps> = ({ tools, currentTool, onToolChange, onUndo, onClear }) => {
   return (
     <div className="toolbar-container">
       <div className="tool-selection">
-        <button
-          className={`tool-button ${currentTool === 'bucket' ? 'active' : ''}`}
-          onClick={() => onToolChange('bucket')}
-          disabled={isBucketDisabled}
-        >
-          バケツ
-        </button>
-        <button
-          className={`tool-button ${currentTool === 'brush' ? 'active' : ''}`}
-          onClick={() => onToolChange('brush')}
-        >
-          ブラシ
-        </button>
-        <button
-          className={`tool-button ${currentTool === 'eraser' ? 'active' : ''}`}
-          onClick={() => onToolChange('eraser')}
-        >
-          けしゴム
-        </button>
+        {tools.map(tool => (
+          <button
+            key={tool}
+            className={`tool-button ${currentTool === tool ? 'active' : ''}`}
+            onClick={() => onToolChange(tool)}
+          >
+            {TOOL_LABELS[tool]}
+          </button>
+        ))}
       </div>
       <div className="action-buttons">
-        <button className="action-button" onClick={onUndo} disabled={isUndoDisabled}>
+        <button className="action-button" onClick={onUndo}>
           やりなおし
         </button>
-        <button className="action-button" onClick={onReset}>
+        <button className="action-button" onClick={onClear}>
           ぜんぶけす
         </button>
       </div>
