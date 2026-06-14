@@ -8,6 +8,12 @@ const TOOL_LABELS: Record<Tool, string> = {
   eraser: 'けしゴム',
 };
 
+const TOOL_ICONS: Record<Tool, string> = {
+  bucket: '🪣',
+  brush: '✏️',
+  eraser: '🧽',
+};
+
 interface ToolbarProps {
   tools: Tool[];
   currentTool: Tool;
@@ -26,16 +32,19 @@ const Toolbar: React.FC<ToolbarProps> = ({ tools, currentTool, onToolChange, onU
             className={`tool-button ${currentTool === tool ? 'active' : ''}`}
             onClick={() => onToolChange(tool)}
           >
-            {TOOL_LABELS[tool]}
+            <span className="btn-icon" aria-hidden="true">{TOOL_ICONS[tool]}</span>
+            <span className="btn-label">{TOOL_LABELS[tool]}</span>
           </button>
         ))}
       </div>
       <div className="action-buttons">
         <button className="action-button" onClick={onUndo}>
-          やりなおし
+          <span className="btn-icon" aria-hidden="true">↩️</span>
+          <span className="btn-label">やりなおし</span>
         </button>
         <button className="action-button" onClick={onClear}>
-          ぜんぶけす
+          <span className="btn-icon" aria-hidden="true">🗑️</span>
+          <span className="btn-label">ぜんぶけす</span>
         </button>
       </div>
     </div>

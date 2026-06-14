@@ -1,61 +1,81 @@
 .toolbar-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 10px;
   width: 100%;
 }
 
-.tool-selection, .action-buttons {
+.tool-selection,
+.action-buttons {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
 }
 
-.tool-button, .action-button {
-  padding: 10px 15px;
-  font-size: 0.9em;
+.tool-button,
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 48px;
+  padding: 8px 16px;
+  font-size: 0.95em;
   font-weight: bold;
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 14px;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12);
+}
+
+.btn-icon {
+  font-size: 1.3em;
+  line-height: 1;
 }
 
 .tool-button {
-  background-color: #007bff;
+  background-color: #4dabf7;
 }
 
 .action-button {
-  background-color: #4CAF50;
+  background-color: #ffb703;
 }
 
-.tool-button:hover, .action-button:hover {
-  transform: translateY(-2px);
+.tool-button:active,
+.action-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
 }
 
 .tool-button.active {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  background-color: #ff7eb6; /* 選択中はアクセントのピンクで目立たせる */
+  box-shadow: 0 3px 0 rgba(214, 51, 132, 0.35);
 }
 
-/* Styles for larger screens */
+/* --- 横向き(タブレット): 右レールに縦積み --- */
 @media (min-width: 768px) and (orientation: landscape) {
   .toolbar-container {
-    flex-direction: row; /* ボタンを横並びにする */
-    justify-content: center; /* 中央揃え */
-    gap: 20px;
+    flex-direction: column;
+    gap: 12px;
   }
-  .tool-selection, .action-buttons {
-    gap: 15px;
+
+  .tool-selection,
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
   }
-  .tool-button, .action-button {
-    padding: 10px 20px;
-    font-size: 1em;
+
+  .tool-button,
+  .action-button {
+    width: 100%;
+    padding: 12px 8px;
+    font-size: 0.9em;
   }
 }

@@ -1,11 +1,14 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* 丸ゴシックを優先して、子ども向けのやわらかい印象に */
+  font-family: 'Hiragino Maru Gothic ProN', 'M PLUS Rounded 1c', 'Rounded Mplus 1c',
+    'Hiragino Kaku Gothic ProN', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 500;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* アプリは明るいパステル基調なので、ライト固定にする */
+  color-scheme: light;
+  color: #4a4a4a;
+  background-color: #fff7fb;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,8 +18,17 @@
 
 body {
   margin: 0;
-  display: flex;
-  /* place-items: center; を削除 */
   min-width: 320px;
   min-height: 100vh;
+  background-color: #fff7fb;
+  /* 子どもが操作してもページごと動かないように */
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* テキスト選択でじゃまにならないように(入力系は除く) */
+button {
+  font-family: inherit;
+  -webkit-user-select: none;
+  user-select: none;
 }

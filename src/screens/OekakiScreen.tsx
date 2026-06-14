@@ -16,12 +16,15 @@ const OekakiScreen: React.FC<OekakiScreenProps> = ({ onBackHome }) => {
   const [color, setColor] = useState('#FF0000');
   const [tool, setTool] = useState<Tool>('brush');
   const [loadedImage, setLoadedImage] = useState<string | null>(null);
+  // スマホ縦で上部メニューをたたんでキャンバスを広げられるように
+  const [menuOpen, setMenuOpen] = useState(true);
 
   const canvasRef = useRef<CanvasHandle>(null);
 
   const handleUpload = (dataUrl: string) => {
     setLoadedImage(dataUrl);
     setTool('brush');
+    setMenuOpen(false); // 読みこんだら自動でたたんで描くスペースを広げる
   };
 
   const handleBlank = () => {
@@ -31,20 +34,29 @@ const OekakiScreen: React.FC<OekakiScreenProps> = ({ onBackHome }) => {
 
   return (
     <div className="app-container">
-      <aside className="drawing-selector">
-        <div className="selector-container">
-          <button className="back-button" onClick={onBackHome}>
-            ← ホームにもどる
-          </button>
-          <h2>じゆうに おえかき</h2>
-          {loadedImage && (
-            <button className="back-button" onClick={handleBlank}>
-              しろがみにする
+      <aside className={`drawing-selector ${menuOpen ? '' : 'collapsed'}`}>
+        <button
+          className="selector-toggle"
+          onClick={() => setMenuOpen(open => !open)}
+          aria-expanded={menuOpen}
+        >
+          {menuOpen ? '▲ メニューをとじる' : '▼ メニューをひらく'}
+        </button>
+        <div className="selector-body">
+          <div className="selector-container">
+            <button className="back-button" onClick={onBackHome}>
+              ← ホームにもどる
             </button>
-          )}
-          <hr className="divider" />
-          {/* Load a black-line drawing to color in (stays inside the lines). */}
-          <ImageUploadButton onImageUpload={handleUpload} />
+            <h2>じゆうに おえかき</h2>
+            {loadedImage && (
+              <button className="back-button" onClick={handleBlank}>
+                しろがみにする
+              </button>
+            )}
+            <hr className="divider" />
+            {/* Load a black-line drawing to color in (stays inside the lines). */}
+            <ImageUploadButton onImageUpload={handleUpload} />
+          </div>
         </div>
       </aside>
       <main className="coloring-canvas">

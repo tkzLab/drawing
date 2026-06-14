@@ -16,12 +16,15 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [color, setColor] = useState('#FF0000');
   const [tool, setTool] = useState<Tool>('bucket');
+  // スマホ縦で上部メニューをたたんでキャンバスを広げられるように
+  const [menuOpen, setMenuOpen] = useState(true);
 
   const canvasRef = useRef<CanvasHandle>(null);
 
   const selectArtwork = (artwork: Artwork) => {
     setSelectedArtwork(artwork);
     setTool('bucket');
+    setMenuOpen(false); // 選んだら自動でたたんで塗るスペースを広げる
   };
 
   let selector;
@@ -49,6 +52,7 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
           onClick={() => {
             setSelectedTheme(null);
             setSelectedArtwork(null);
+            setMenuOpen(true);
           }}
         >
           ← テーマにもどる
@@ -71,7 +75,18 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
 
   return (
     <div className="app-container">
-      <aside className="drawing-selector">{selector}</aside>
+      <aside className={`drawing-selector ${menuOpen ? '' : 'collapsed'}`}>
+        {selectedArtwork && (
+          <button
+            className="selector-toggle"
+            onClick={() => setMenuOpen(open => !open)}
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? '▲ メニューをとじる' : `▼ ${selectedArtwork.name}をかえる`}
+          </button>
+        )}
+        <div className="selector-body">{selector}</div>
+      </aside>
       <main className="coloring-canvas">
         {selectedArtwork ? (
           <ImageColoringCanvas key={selectedArtwork.id} ref={canvasRef} tool={tool} color={color} image={selectedArtwork.image} />

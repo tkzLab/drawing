@@ -1,75 +1,80 @@
 .selector-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  padding: 10px;
-  height: 100%;
+  gap: 14px;
+  padding: 6px;
+  width: 100%;
 }
 
 .selector-container h2 {
   text-align: center;
   font-size: 1.2em;
-  margin: 0 0 10px 0;
-  color: #333;
+  margin: 4px 0;
+  color: #d6336c;
 }
 
 .button-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
   gap: 10px;
 }
 
 .theme-button,
 .drawing-button {
-  padding: 20px 10px;
-  font-size: 1.1em;
+  min-height: 56px;
+  padding: 16px 10px;
+  font-size: 1.05em;
   font-weight: bold;
-  color: #333;
+  color: #5a5a5a;
   background-color: #fff;
-  border: 2px solid #ddd;
-  border-radius: 10px;
+  border: 3px solid #ffe1ef;
+  border-radius: 16px;
   cursor: pointer;
   text-align: center;
-  transition: background-color 0.2s, color 0.2s, transform 0.2s;
+  transition: background-color 0.2s, color 0.2s, transform 0.1s, border-color 0.2s;
+  box-shadow: 0 3px 0 rgba(255, 126, 182, 0.18);
 }
 
-.theme-button:hover,
-.drawing-button:hover {
-  background-color: #f0f0f0;
-  transform: scale(1.05);
+.theme-button:active,
+.drawing-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(255, 126, 182, 0.18);
 }
 
 .drawing-button.selected {
-  background-color: #FFD700;
+  background-color: #ff7eb6;
   color: #fff;
-  border-color: #FFD700;
+  border-color: #ff7eb6;
 }
 
 .back-button {
   width: 100%;
+  min-height: 44px;
   padding: 10px;
   font-size: 1em;
   font-weight: bold;
   color: #fff;
-  background-color: #6c757d; /* A neutral gray */
+  background-color: #adb5bd;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  margin-bottom: 15px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
 }
 
-.back-button:hover {
-  background-color: #5a6268;
+.back-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
 }
 
 .divider {
   border: none;
-  border-top: 1px solid #ddd;
-  margin: 15px 0;
+  border-top: 2px dashed #ffe1ef;
+  margin: 10px 0;
+  width: 100%;
 }
 
 .custom-drawing-text {
   text-align: center;
   font-size: 0.9em;
-  color: #555;
+  color: #888;
 }

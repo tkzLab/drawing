@@ -1,14 +1,15 @@
-/* --- Mobile First Base Styles (Default) --- */
+/* --- Mobile First Base Styles (Default / 縦向き) --- */
 .app-container {
   display: flex;
   flex-direction: column;
   width: 100vw;
   height: 100dvh; /* Use dynamic viewport height */
-  background-color: #f0f0f0;
+  background: linear-gradient(160deg, #fff7fb 0%, #f3f9ff 100%);
 }
 
 .coloring-canvas {
-  flex-grow: 1; /* Make canvas take available space */
+  flex: 1 1 auto; /* 残りの高さをすべて使ってキャンバスを最大化 */
+  min-height: 0;  /* flex 子が縮めるように(はみ出し防止) */
   position: relative;
   display: flex;
   justify-content: center;
@@ -18,107 +19,142 @@
   background-color: #fff;
 }
 
-/* This pseudo-element helps maintain a consistent aspect ratio for the drawing area */
-.coloring-canvas::before {
-  content: '';
-  display: block;
-  padding-top: 75%; /* 4:3 Aspect Ratio. Can be adjusted. */
-}
-
-/* This is the actual container for the SVG and Canvas */
+/* キャンバス本体(.image-stage / ColoringCanvas のラッパ)は領域いっぱいに */
 .coloring-canvas > div {
-  position: absolute;
-  top: 5%;
-  left: 5%;
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
 }
 
 .placeholder-text {
   font-size: 1.5em;
-  color: #aaa;
+  color: #c9a9c2;
   text-align: center;
+  font-weight: bold;
 }
 
-.drawing-selector, .color-palette, .toolbar {
-  padding: 8px; /* Adjusted padding */
-  background-color: #f7f7f7;
-  border-top: 1px solid #e0e0e0;
-  box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+.drawing-selector,
+.color-palette,
+.toolbar {
+  padding: 10px;
+  background-color: #fff;
+  border-top: 2px solid #ffe1ef;
+  box-shadow: 0 -2px 8px rgba(255, 126, 182, 0.08);
   flex-shrink: 0; /* Prevent shrinking */
 }
 
-.drawing-selector, .color-palette {
+.color-palette {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
   gap: 10px;
-  overflow-x: auto; /* Allow horizontal scrolling */
+  overflow-x: auto; /* 横スクロールで色を並べる */
+  -webkit-overflow-scrolling: touch;
 }
 
-/* --- Tablet/Desktop Styles --- */
+.drawing-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 45dvh; /* 開いていても画面の半分弱まで。残りはキャンバスへ */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* たたんだ状態: トグルだけ残してメニュー本体を隠し、キャンバスを最大化 */
+.drawing-selector.collapsed {
+  max-height: none;
+  overflow-y: visible;
+}
+
+.drawing-selector.collapsed .selector-body {
+  display: none;
+}
+
+.selector-toggle {
+  flex-shrink: 0;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 14px;
+  font-size: 1em;
+  font-weight: bold;
+  color: #d6336c;
+  background-color: #ffe1ef;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.selector-toggle:active {
+  background-color: #ffd0e4;
+}
+
+/* --- Tablet/Desktop Styles (横向き) --- */
 @media (min-width: 768px) and (orientation: landscape) {
   .app-container {
     display: grid;
-    /* ツールバーを下に配置し、描画エリアの高さを確保する新しいレイアウト */
-    grid-template-columns: 150px 1fr 120px;
-    grid-template-rows: 1fr auto; /* 描画エリア(1fr)とツールバー(auto) */
+    /* 左:絵柄えらび / 中央:キャンバス / 右:ツール+パレットのレール。
+       ツールバーを下段から外し、キャンバスを2行ぶち抜きで全高化する。 */
+    grid-template-columns: 168px 1fr 132px;
+    grid-template-rows: auto 1fr;
     grid-template-areas:
-      "selector canvas palette"
-      "toolbar toolbar toolbar"; /* ツールバーを一番下に配置 */
-    height: 100dvh; /* Use dynamic viewport height */
+      "selector canvas tools"
+      "selector canvas palette";
+    height: 100dvh;
     max-width: 1366px;
     margin: auto;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(255, 126, 182, 0.18);
     overflow: hidden;
   }
 
   .coloring-canvas {
-    grid-area: canvas; /* 明示的にエリアを指定 */
+    grid-area: canvas; /* 縦2行スパン = 画面全高 → 縦長の絵が大きく表示される */
     padding: 20px;
-    border-left: 1px solid #e0e0e0;
-    border-right: 1px solid #e0e0e0;
-  }
-
-  .coloring-canvas::before {
-    content: none; /* Disable aspect ratio hack in grid layout */
-  }
-
-  .coloring-canvas > div {
-    position: static; /* Revert to static positioning */
-    width: 100%;
-    height: 100%;
+    border-left: 2px solid #ffe1ef;
+    border-right: 2px solid #ffe1ef;
   }
 
   .drawing-selector {
     grid-area: selector;
     flex-direction: column;
+    align-items: stretch;
     border: none;
     box-shadow: none;
+    max-height: none; /* サイドレールでは縦いっぱい使える */
     overflow-y: auto;
     overflow-x: hidden;
-    gap: 15px;
-    padding: 20px;
+    gap: 14px;
+    padding: 18px 14px;
   }
 
-  .color-palette {
-    grid-area: palette;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start; /* Explicitly align items to the top */
-    align-items: center;
-    border: none;
-    box-shadow: none;
-    overflow-y: auto;
-    overflow-x: hidden;
-    gap: 15px;
-    padding: 15px 20px; /* Adjust padding for better spacing */
+  /* 横向きのサイドレールではトグル不要・常に展開 */
+  .selector-toggle {
+    display: none;
+  }
+
+  .drawing-selector.collapsed .selector-body {
+    display: block;
   }
 
   .toolbar {
-    grid-area: toolbar; /* 明示的にエリアを指定 */
-    border-top: 1px solid #e0e0e0; /* 上のエリアとの境界線 */
-    padding: 10px 20px;
+    grid-area: tools; /* 右レール上部 */
+    border-top: none;
+    box-shadow: none;
+    padding: 16px 12px 8px;
+  }
+
+  .color-palette {
+    grid-area: palette; /* 右レール残り(縦スクロール) */
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    border: none;
+    box-shadow: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    gap: 14px;
+    padding: 8px 12px 18px;
   }
 }
