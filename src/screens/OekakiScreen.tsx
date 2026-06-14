@@ -3,6 +3,7 @@ import '../App.css';
 import '../components/DrawingSelector.css';
 import ColorPalette from '../components/ColorPalette';
 import ColoringCanvas from '../components/ColoringCanvas';
+import ImageColoringCanvas from '../components/ImageColoringCanvas';
 import ImageUploadButton from '../components/ImageUploadButton';
 import Toolbar from '../components/Toolbar';
 import { CanvasHandle, Tool } from '../types';
@@ -14,9 +15,19 @@ interface OekakiScreenProps {
 const OekakiScreen: React.FC<OekakiScreenProps> = ({ onBackHome }) => {
   const [color, setColor] = useState('#FF0000');
   const [tool, setTool] = useState<Tool>('brush');
-  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+  const [loadedImage, setLoadedImage] = useState<string | null>(null);
 
   const canvasRef = useRef<CanvasHandle>(null);
+
+  const handleUpload = (dataUrl: string) => {
+    setLoadedImage(dataUrl);
+    setTool('brush');
+  };
+
+  const handleBlank = () => {
+    setLoadedImage(null);
+    setTool('brush'); // bucket is only meaningful on a loaded line drawing
+  };
 
   return (
     <div className="app-container">
@@ -26,31 +37,29 @@ const OekakiScreen: React.FC<OekakiScreenProps> = ({ onBackHome }) => {
             ← ホームにもどる
           </button>
           <h2>じゆうに おえかき</h2>
-          {backgroundImage && (
-            <button className="back-button" onClick={() => setBackgroundImage(null)}>
+          {loadedImage && (
+            <button className="back-button" onClick={handleBlank}>
               しろがみにする
             </button>
           )}
           <hr className="divider" />
-          {/* For a grown-up: load a photo to draw on top of. */}
-          <ImageUploadButton onImageUpload={setBackgroundImage} />
+          {/* Load a black-line drawing to color in (stays inside the lines). */}
+          <ImageUploadButton onImageUpload={handleUpload} />
         </div>
       </aside>
       <main className="coloring-canvas">
-        <ColoringCanvas
-          key={backgroundImage ?? 'blank'}
-          ref={canvasRef}
-          tool={tool}
-          color={color}
-          backgroundImage={backgroundImage ?? undefined}
-        />
+        {loadedImage ? (
+          <ImageColoringCanvas key={loadedImage} ref={canvasRef} tool={tool} color={color} image={loadedImage} />
+        ) : (
+          <ColoringCanvas ref={canvasRef} tool={tool} color={color} />
+        )}
       </main>
       <aside className="color-palette">
         <ColorPalette selectedColor={color} onSelectColor={setColor} />
       </aside>
       <footer className="toolbar">
         <Toolbar
-          tools={['brush', 'eraser']}
+          tools={loadedImage ? ['bucket', 'brush', 'eraser'] : ['brush', 'eraser']}
           currentTool={tool}
           onToolChange={setTool}
           onUndo={() => canvasRef.current?.undo()}

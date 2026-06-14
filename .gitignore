@@ -26,6 +26,9 @@ dist-ssr
 # Scratch / working files
 tmp/
 
-# Coloring artwork — provide your own commercial-use / original / AI-generated
-# PNGs locally. Kept out of version control to avoid committing third-party art.
-public/coloring/
+# Coloring artwork: keep original hand-authored SVGs in version control, but
+# exclude raster art (third-party / sample PNGs, uploaded photos).
+public/coloring/*.png
+public/coloring/*.jpg
+public/coloring/*.jpeg
+public/coloring/*.webp
