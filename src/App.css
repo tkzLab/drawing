@@ -146,10 +146,11 @@
 
   .color-palette {
     grid-area: palette; /* 右レール残り(縦スクロール) */
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+    /* 2列グリッドにして、入りきらない色は縦スクロールで全部出す */
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    align-content: start;
+    justify-content: center;
     border: none;
     box-shadow: none;
     overflow-y: auto;

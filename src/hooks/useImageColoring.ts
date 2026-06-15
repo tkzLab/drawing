@@ -44,6 +44,20 @@ export const useImageColoring = ({ colorRef, lineRef, image, color, tool }: Para
   toolRef.current = tool;
   colorValRef.current = color;
 
+  // Persist the colored layer per artwork in the browser so reopening a picture
+  // restores what the child already painted. Only the color canvas is saved
+  // (the outline is redrawn from the source image), as a transparent PNG.
+  const storageKey = `nurie-color:v1:${image}`;
+  const persist = () => {
+    const canvas = colorRef.current;
+    if (!canvas || dimRef.current.w === 0) return;
+    try {
+      localStorage.setItem(storageKey, canvas.toDataURL('image/png'));
+    } catch {
+      /* storage full or unavailable — coloring just won't be remembered */
+    }
+  };
+
   useEffect(() => {
     const colorCanvas = colorRef.current;
     const lineCanvas = lineRef.current;
@@ -83,6 +97,19 @@ export const useImageColoring = ({ colorRef, lineRef, image, color, tool }: Para
       colorCanvas.width = w;
       colorCanvas.height = h;
       colorCanvas.getContext('2d')?.clearRect(0, 0, w, h);
+
+      // Restore previously saved coloring for this picture, if any.
+      let saved: string | null = null;
+      try {
+        saved = localStorage.getItem(storageKey);
+      } catch {
+        saved = null;
+      }
+      if (saved) {
+        const restored = new Image();
+        restored.onload = () => colorCanvas.getContext('2d')?.drawImage(restored, 0, 0, w, h);
+        restored.src = saved;
+      }
 
       lineCanvas.width = w;
       lineCanvas.height = h;
@@ -166,6 +193,7 @@ export const useImageColoring = ({ colorRef, lineRef, image, color, tool }: Para
       out[i * 4 + 3] = 255;
     }
     ctx.putImageData(image, 0, 0);
+    persist();
   };
 
   const strokeWidth = () => {
@@ -245,7 +273,10 @@ export const useImageColoring = ({ colorRef, lineRef, image, color, tool }: Para
   };
 
   const onPointerUp = () => {
-    strokingRef.current = false;
+    if (strokingRef.current) {
+      strokingRef.current = false;
+      persist(); // remember the finished pen/eraser stroke
+    }
   };
 
   const undo = () => {
@@ -257,6 +288,7 @@ export const useImageColoring = ({ colorRef, lineRef, image, color, tool }: Para
     ctx.globalCompositeOperation = 'source-over';
     ctx.clearRect(0, 0, w, h);
     if (prev) ctx.putImageData(prev, 0, 0);
+    persist();
   };
 
   const clear = () => {
@@ -267,6 +299,7 @@ export const useImageColoring = ({ colorRef, lineRef, image, color, tool }: Para
     snapshot();
     ctx.globalCompositeOperation = 'source-over';
     ctx.clearRect(0, 0, w, h);
+    persist();
   };
 
   return { onPointerDown, onPointerMove, onPointerUp, undo, clear };

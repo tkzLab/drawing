@@ -1,30 +1,91 @@
-# React + TypeScript + Vite
+# お絵かき & ぬりえ アプリケーション
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+これはReactとTypeScriptで構築された、Webベースのお絵かき＆ぬりえアプリケーションです。ユーザーは、あらかじめ用意されたテーマ別の線画を選んで色を塗ったり、好きな画像をアップロードしてその上から自由にお絵かきしたりすることができます。
 
-Currently, two official plugins are available:
+## 主な機能
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+*   **ぬりえ機能**:
+    *   複数のテーマ（例: どうぶつ、のりもの）から好きな線画を選択できます。
+    *   カラーパレットから色を選び、線画の各パーツをクリックして色を塗ることができます（バケツツール）。
+    *   作業履歴を戻す「元に戻す」機能や、全体をリセットする機能があります。
+*   **お絵かき機能**:
+    *   ユーザーは手持ちの画像ファイルをアップロードし、その画像をキャンバスとして利用できます。
+    *   ブラシツールや消しゴムツールを使って、自由に線を描画できます。
+*   **レスポンシブデザイン**:
+    *   アプリケーションは、PC、タブレット、スマートフォンなど、さまざまなデバイスの画面サイズに対応しています。
 
-## Expanding the ESLint configuration
+## 技術スタック
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+*   **フレームワーク**: [React](https://react.dev/)
+*   **言語**: [TypeScript](https://www.typescriptlang.org/)
+*   **ビルドツール**: [Vite](https://vitejs.dev/)
+*   **描画**: HTML5 Canvas API
+*   **デプロイ**: GitHub Pages
 
-- Configure the top-level `parserOptions` property like this:
+## プロジェクトの構造
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+プロジェクトの主要なファイルとディレクトリは以下の通りです。
+
+```
+/
+├── src/
+│   ├── components/      # 再利用可能なReactコンポーネント
+│   │   ├── DrawingCanvas.tsx  # 自由描画用のキャンバス
+│   │   ├── ColorPalette.tsx   # カラーパレット
+│   │   └── Toolbar.tsx        # ツール選択（ブラシ、バケツ等）
+│   ├── drawings/        # ぬりえ用のSVGコンポーネント
+│   ├── hooks/           # カスタムフック
+│   │   └── useDrawing.ts    # Canvas描画ロジ-ックのカスタムフック
+│   ├── App.tsx          # アプリケーションのメインコンポーネント
+│   └── main.tsx         # アプリケーションのエントリーポイント
+├── package.json         # プロジェクト情報と依存関係
+└── vite.config.ts       # Viteの設定ファイル
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## セットアップと実行方法
+
+1.  **依存関係のインストール**:
+    ```bash
+    npm install
+    ```
+
+2.  **開発サーバーの起動**:
+    ```bash
+    npm run dev
+    ```
+    これにより、ローカル環境でアプリケーションが起動し、ブラウザで確認できます。
+
+3.  **ビルド**:
+    ```bash
+    npm run build
+    ```
+    `dist` ディレクトリに、本番環境用のファイルが生成されます。
+
+4.  **デプロイ（公開）**:
+    ```bash
+    npm run deploy
+    ```
+    ビルド後、`dist` を GitHub Pages（`gh-pages` ブランチ）へ公開します。
+    公開先: https://tkzlab.github.io/drawing/
+
+    > **注意（初回 / 別端末）**: push が `RPC failed; HTTP 400` で失敗する場合、
+    > GitHub への push が HTTP/2 で失敗する既知の不具合です。HTTP/1.1 を強制すると直ります。
+    > `gh-pages` は内部キャッシュ clone を使うため、**グローバル設定**が必要です:
+    > ```bash
+    > git config --global http.version HTTP/1.1
+    > git config --global http.postBuffer 524288000
+    > ```
+
+## 主要コンポーネントの解説
+
+### `App.tsx`
+
+アプリケーション全体のレイアウトと状態管理を担う最上位コンポーネントです。選択された色、ツール、ぬりえのテーマ、アップロードされた画像などの状態を一元管理し、各コンポーネントに渡します。
+
+### `DrawingCanvas.tsx` & `useDrawing.ts`
+
+自由お絵かき機能の中核です。`useDrawing.ts` カスタムフックが、マウスやタッチイベントに応じたCanvasへの描画ロジック（線の開始、描画、終了）をカプセル化しています。`DrawingCanvas.tsx` はこのフックを利用して、実際の`<canvas>`要素をレンダリングします。
+
+### `drawings/` ディレクトリ内のコンポーネント
+
+ぬりえ機能で使われる線画は、それぞれがReactコンポーネント（SVG）として定義されています。各パーツ（例: `Cat.tsx` の耳や尻尾）はクリックイベントをハンドリングできるようになっており、`App.tsx` から渡された色情報(`fills`)に応じて部分的に色が塗られる仕組みです。

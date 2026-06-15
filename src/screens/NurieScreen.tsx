@@ -38,7 +38,8 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
         <div className="button-grid">
           {themes.map(theme => (
             <button key={theme.id} className="theme-button" onClick={() => setSelectedTheme(theme)}>
-              {theme.name}
+              <img className="thumb" src={theme.artworks[0]?.image} alt="" loading="lazy" />
+              <span className="thumb-label">{theme.name}</span>
             </button>
           ))}
         </div>
@@ -64,8 +65,9 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
               key={artwork.id}
               className={`drawing-button ${selectedArtwork?.id === artwork.id ? 'selected' : ''}`}
               onClick={() => selectArtwork(artwork)}
+              aria-label={artwork.name}
             >
-              {artwork.name}
+              <img className="thumb" src={artwork.image} alt={artwork.name} loading="lazy" />
             </button>
           ))}
         </div>

@@ -26,9 +26,13 @@ dist-ssr
 # Scratch / working files
 tmp/
 
-# Coloring artwork: keep original hand-authored SVGs in version control, but
-# exclude raster art (third-party / sample PNGs, uploaded photos).
+# Coloring artwork: exclude raster art by default (sample PNGs, uploaded
+# photos), but keep the actual line-art shipped with the app under version
+# control so a fresh clone can build.
 public/coloring/*.png
 public/coloring/*.jpg
 public/coloring/*.jpeg
 public/coloring/*.webp
+!public/coloring/princess.png
+!public/coloring/princess-castle.png
+!public/coloring/prince.png

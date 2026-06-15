@@ -21,9 +21,12 @@
 
 .theme-button,
 .drawing-button {
-  min-height: 56px;
-  padding: 16px 10px;
-  font-size: 1.05em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 8px 6px;
+  font-size: 0.95em;
   font-weight: bold;
   color: #5a5a5a;
   background-color: #fff;
@@ -33,6 +36,25 @@
   text-align: center;
   transition: background-color 0.2s, color 0.2s, transform 0.1s, border-color 0.2s;
   box-shadow: 0 3px 0 rgba(255, 126, 182, 0.18);
+}
+
+/* 塗り絵のサムネイル: 比率がちがっても正方の枠に全体が収まるように contain */
+.thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  background-color: #fff;
+  border-radius: 10px;
+  pointer-events: none; /* タップは必ずボタンに渡す */
+}
+
+.thumb-label {
+  line-height: 1.2;
+}
+
+/* 選択中の塗り絵は枠の色を反転させつつ、絵は白地のまま見せる */
+.drawing-button.selected .thumb {
+  background-color: #fff;
 }
 
 .theme-button:active,
