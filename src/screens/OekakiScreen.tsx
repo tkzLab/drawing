@@ -23,7 +23,7 @@ const OekakiScreen: React.FC<OekakiScreenProps> = ({ onBackHome }) => {
 
   const handleUpload = (dataUrl: string) => {
     setLoadedImage(dataUrl);
-    setTool('brush');
+    setTool('bucket'); // 線画を読みこんだらぬりえ側と同じくバケツを既定に
     setMenuOpen(false); // 読みこんだら自動でたたんで描くスペースを広げる
   };
 
