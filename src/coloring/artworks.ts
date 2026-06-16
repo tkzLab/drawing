@@ -11,9 +11,37 @@ export const themes: Theme[] = [
     id: 'princess',
     name: 'プリンセス',
     artworks: [
-      { id: 'princess', name: 'おひめさま', image: img('princess.png') },
-      { id: 'princess-castle', name: 'おしろのおひめさま', image: img('princess-castle.png') },
+      { id: 'princess-cute', name: 'かわいいおひめさま', image: img('princess-cute.png') },
+      { id: 'unicorn', name: 'ユニコーン', image: img('unicorn.png') },
       { id: 'prince', name: 'おうじさま', image: img('prince.png') },
+    ],
+  },
+  {
+    id: 'dinosaur',
+    name: 'きょうりゅう',
+    artworks: [
+      { id: 'dinosaur', name: 'きょうりゅう', image: img('dinosaur.png') },
+    ],
+  },
+  {
+    id: 'vehicles',
+    name: 'のりもの',
+    artworks: [
+      { id: 'police-car', name: 'パトカー', image: img('police-car.png') },
+    ],
+  },
+  {
+    id: 'space',
+    name: 'うちゅう',
+    artworks: [
+      { id: 'astronaut', name: 'うちゅうひこうし', image: img('astronaut.png') },
+    ],
+  },
+  {
+    id: 'food',
+    name: 'たべもの',
+    artworks: [
+      { id: 'cupcake', name: 'カップケーキ', image: img('cupcake.png') },
     ],
   },
 ];

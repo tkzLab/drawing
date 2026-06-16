@@ -33,6 +33,10 @@ public/coloring/*.png
 public/coloring/*.jpg
 public/coloring/*.jpeg
 public/coloring/*.webp
-!public/coloring/princess.png
-!public/coloring/princess-castle.png
 !public/coloring/prince.png
+!public/coloring/princess-cute.png
+!public/coloring/unicorn.png
+!public/coloring/dinosaur.png
+!public/coloring/police-car.png
+!public/coloring/astronaut.png
+!public/coloring/cupcake.png
