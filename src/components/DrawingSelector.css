@@ -15,7 +15,9 @@
 
 .button-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  /* 上限を付けて、テーマ内の絵が1枚だけでも横いっぱいに引き伸ばされないようにする */
+  grid-template-columns: repeat(auto-fit, minmax(96px, 120px));
+  justify-content: center;
   gap: 10px;
 }
 

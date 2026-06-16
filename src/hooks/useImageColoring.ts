@@ -12,6 +12,7 @@ interface Params {
   image: string;
   color: string;
   tool: Tool;
+  onChange?: () => void; // fired after a save so the selection grid can refresh its thumbnail
 }
 
 const hexToRgb = (hex: string) => {
@@ -28,7 +29,7 @@ const hexToRgb = (hex: string) => {
 // area under the touch point (strokes never spill across the black lines).
 // Everything happens on one "color" canvas (outline kept crisp on a layer
 // above), so undo and clear behave consistently.
-export const useImageColoring = ({ colorRef, lineRef, image, color, tool }: Params) => {
+export const useImageColoring = ({ colorRef, lineRef, image, color, tool, onChange }: Params) => {
   const maskRef = useRef<Uint8Array | null>(null); // 1 = line/barrier
   const dimRef = useRef({ w: 0, h: 0 });
   const historyRef = useRef<ImageData[]>([]);
@@ -41,13 +42,42 @@ export const useImageColoring = ({ colorRef, lineRef, image, color, tool }: Para
 
   const toolRef = useRef(tool);
   const colorValRef = useRef(color);
+  const onChangeRef = useRef(onChange);
   toolRef.current = tool;
   colorValRef.current = color;
+  onChangeRef.current = onChange;
 
   // Persist the colored layer per artwork in the browser so reopening a picture
   // restores what the child already painted. Only the color canvas is saved
   // (the outline is redrawn from the source image), as a transparent PNG.
   const storageKey = `nurie-color:v1:${image}`;
+  // A flattened "white bg + colors + outline" thumbnail so the selection grid can
+  // show how far the child has colored each picture (see thumbKey usage in NurieScreen).
+  const thumbKey = `nurie-thumb:v1:${image}`;
+  const THUMB_MAX = 160;
+  const persistThumb = () => {
+    const colorCanvas = colorRef.current;
+    const lineCanvas = lineRef.current;
+    const { w, h } = dimRef.current;
+    if (!colorCanvas || !lineCanvas || w === 0) return;
+    const scale = Math.min(1, THUMB_MAX / Math.max(w, h));
+    const tw = Math.max(1, Math.round(w * scale));
+    const th = Math.max(1, Math.round(h * scale));
+    const off = document.createElement('canvas');
+    off.width = tw;
+    off.height = th;
+    const octx = off.getContext('2d');
+    if (!octx) return;
+    octx.fillStyle = '#fff';
+    octx.fillRect(0, 0, tw, th);
+    octx.drawImage(colorCanvas, 0, 0, tw, th);
+    octx.drawImage(lineCanvas, 0, 0, tw, th);
+    try {
+      localStorage.setItem(thumbKey, off.toDataURL('image/png'));
+    } catch {
+      /* storage full or unavailable — thumbnail just falls back to the blank line art */
+    }
+  };
   const persist = () => {
     const canvas = colorRef.current;
     if (!canvas || dimRef.current.w === 0) return;
@@ -56,6 +86,8 @@ export const useImageColoring = ({ colorRef, lineRef, image, color, tool }: Para
     } catch {
       /* storage full or unavailable — coloring just won't be remembered */
     }
+    persistThumb();
+    onChangeRef.current?.();
   };
 
   useEffect(() => {

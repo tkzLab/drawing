@@ -61,6 +61,27 @@
   -webkit-overflow-scrolling: touch;
 }
 
+/* 塗り絵を選んでいないあいだ(テーマ選択・ぬりえ選択)は、キャンバス・パレット・
+   道具を出さず、ホーム同様にサムネイル一覧だけを画面いっぱいに見せる。
+   塗り絵を選んで初めてキャンバスと道具が現れる。全サイズ共通。 */
+.app-container.no-artwork .coloring-canvas,
+.app-container.no-artwork .color-palette,
+.app-container.no-artwork .toolbar {
+  display: none;
+}
+
+.app-container.no-artwork .drawing-selector {
+  flex: 1 1 auto;
+  max-height: none;
+}
+
+/* 一覧は中央寄せで適度な幅に(ホーム画面と同じ見え方)。
+   モバイルではビューポートより広いので実質全幅のまま。 */
+.app-container.no-artwork .selector-container {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
 /* たたんだ状態: トグルだけ残してメニュー本体を隠し、キャンバスを最大化 */
 .drawing-selector.collapsed {
   max-height: none;
@@ -113,6 +134,13 @@
     padding: 20px;
     border-left: 2px solid #ffe1ef;
     border-right: 2px solid #ffe1ef;
+  }
+
+  /* 横向き/PCでも、未選択時はサイドレールをやめてサムネイル一覧を全幅表示にする */
+  .app-container.no-artwork {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: 'selector';
   }
 
   .drawing-selector {

@@ -18,8 +18,21 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   const [tool, setTool] = useState<Tool>('bucket');
   // スマホ縦で上部メニューをたたんでキャンバスを広げられるように
   const [menuOpen, setMenuOpen] = useState(true);
+  // 塗るたびに増やして、選択中のぬりえのサムネイルを塗り済み画像に再読込させる
+  const [, bumpThumbs] = useState(0);
 
   const canvasRef = useRef<CanvasHandle>(null);
+
+  // Show the child's saved coloring as the thumbnail (falls back to the blank
+  // line art if they haven't colored it yet). Saved by useImageColoring.persist.
+  const thumbSrc = (image: string | undefined) => {
+    if (!image) return image;
+    try {
+      return localStorage.getItem(`nurie-thumb:v1:${image}`) ?? image;
+    } catch {
+      return image;
+    }
+  };
 
   const selectArtwork = (artwork: Artwork) => {
     setSelectedArtwork(artwork);
@@ -38,7 +51,7 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
         <div className="button-grid">
           {themes.map(theme => (
             <button key={theme.id} className="theme-button" onClick={() => setSelectedTheme(theme)}>
-              <img className="thumb" src={theme.artworks[0]?.image} alt="" loading="lazy" />
+              <img className="thumb" src={thumbSrc(theme.artworks[0]?.image)} alt="" loading="lazy" />
               <span className="thumb-label">{theme.name}</span>
             </button>
           ))}
@@ -67,7 +80,7 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
               onClick={() => selectArtwork(artwork)}
               aria-label={artwork.name}
             >
-              <img className="thumb" src={artwork.image} alt={artwork.name} loading="lazy" />
+              <img className="thumb" src={thumbSrc(artwork.image)} alt={artwork.name} loading="lazy" />
             </button>
           ))}
         </div>
@@ -76,7 +89,7 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   }
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${selectedArtwork ? '' : 'no-artwork'}`}>
       <aside className={`drawing-selector ${menuOpen ? '' : 'collapsed'}`}>
         {selectedArtwork && (
           <button
@@ -91,7 +104,14 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
       </aside>
       <main className="coloring-canvas">
         {selectedArtwork ? (
-          <ImageColoringCanvas key={selectedArtwork.id} ref={canvasRef} tool={tool} color={color} image={selectedArtwork.image} />
+          <ImageColoringCanvas
+            key={selectedArtwork.id}
+            ref={canvasRef}
+            tool={tool}
+            color={color}
+            image={selectedArtwork.image}
+            onChange={() => bumpThumbs(n => n + 1)}
+          />
         ) : (
           <div className="placeholder-text">ぬりえをえらんでね！</div>
         )}

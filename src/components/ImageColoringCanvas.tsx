@@ -7,13 +7,14 @@ interface ImageColoringCanvasProps {
   image: string;
   tool: Tool;
   color: string;
+  onChange?: () => void;
 }
 
 // Two stacked canvases sized to the line-art image: the bottom holds the colors
 // (bucket flood-fill + pen + eraser), the top shows the black outline so the
 // lines always stay crisp above the colors.
 const ImageColoringCanvas = forwardRef<CanvasHandle, ImageColoringCanvasProps>(
-  ({ image, tool, color }, ref) => {
+  ({ image, tool, color, onChange }, ref) => {
     const colorRef = useRef<HTMLCanvasElement>(null);
     const lineRef = useRef<HTMLCanvasElement>(null);
     const { onPointerDown, onPointerMove, onPointerUp, undo, clear } = useImageColoring({
@@ -22,6 +23,7 @@ const ImageColoringCanvas = forwardRef<CanvasHandle, ImageColoringCanvasProps>(
       image,
       tool,
       color,
+      onChange,
     });
 
     useImperativeHandle(ref, () => ({ undo, clear }), [undo, clear]);
