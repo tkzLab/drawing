@@ -21,6 +21,7 @@ export const themes: Theme[] = [
     name: 'きょうりゅう',
     artworks: [
       { id: 'dinosaur', name: 'きょうりゅう', image: img('dinosaur.png') },
+      { id: 'triceratops', name: 'トリケラトプス', image: img('triceratops.png') },
     ],
   },
   {
@@ -28,6 +29,7 @@ export const themes: Theme[] = [
     name: 'のりもの',
     artworks: [
       { id: 'police-car', name: 'パトカー', image: img('police-car.png') },
+      { id: 'fire-truck', name: 'しょうぼうしゃ', image: img('fire-truck.png') },
     ],
   },
   {
@@ -35,6 +37,7 @@ export const themes: Theme[] = [
     name: 'うちゅう',
     artworks: [
       { id: 'astronaut', name: 'うちゅうひこうし', image: img('astronaut.png') },
+      { id: 'alien-ufo', name: 'うちゅうじん', image: img('alien-ufo.png') },
     ],
   },
   {
@@ -42,6 +45,23 @@ export const themes: Theme[] = [
     name: 'たべもの',
     artworks: [
       { id: 'cupcake', name: 'カップケーキ', image: img('cupcake.png') },
+      { id: 'parfait', name: 'パフェ', image: img('parfait.png') },
+    ],
+  },
+  {
+    id: 'animals',
+    name: 'どうぶつ',
+    artworks: [
+      { id: 'cat', name: 'ねこ', image: img('cat.png') },
+      { id: 'raccoon-dog', name: 'たぬき', image: img('raccoon-dog.png') },
+    ],
+  },
+  {
+    id: 'sea',
+    name: 'うみ',
+    artworks: [
+      { id: 'whale', name: 'くじら', image: img('whale.png') },
+      { id: 'dolphin', name: 'いるか', image: img('dolphin.png') },
     ],
   },
 ];
