@@ -22,6 +22,7 @@ export const themes: Theme[] = [
     artworks: [
       { id: 'dinosaur', name: 'きょうりゅう', image: img('dinosaur.png') },
       { id: 'triceratops', name: 'トリケラトプス', image: img('triceratops.png') },
+      { id: 'stegosaurus', name: 'ステゴサウルス', image: img('stegosaurus.png') },
     ],
   },
   {
@@ -30,6 +31,7 @@ export const themes: Theme[] = [
     artworks: [
       { id: 'police-car', name: 'パトカー', image: img('police-car.png') },
       { id: 'fire-truck', name: 'しょうぼうしゃ', image: img('fire-truck.png') },
+      { id: 'train', name: 'きしゃ', image: img('train.png') },
     ],
   },
   {
@@ -38,6 +40,7 @@ export const themes: Theme[] = [
     artworks: [
       { id: 'astronaut', name: 'うちゅうひこうし', image: img('astronaut.png') },
       { id: 'alien-ufo', name: 'うちゅうじん', image: img('alien-ufo.png') },
+      { id: 'rocket', name: 'ロケット', image: img('rocket.png') },
     ],
   },
   {
@@ -53,6 +56,7 @@ export const themes: Theme[] = [
     name: 'どうぶつ',
     artworks: [
       { id: 'cat', name: 'ねこ', image: img('cat.png') },
+      { id: 'cat2', name: 'ねこ（おすわり）', image: img('cat2.png') },
       { id: 'raccoon-dog', name: 'たぬき', image: img('raccoon-dog.png') },
     ],
   },
