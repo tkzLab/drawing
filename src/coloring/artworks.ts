@@ -32,6 +32,7 @@ export const themes: Theme[] = [
       { id: 'police-car', name: 'パトカー', image: img('police-car.png') },
       { id: 'fire-truck', name: 'しょうぼうしゃ', image: img('fire-truck.png') },
       { id: 'train', name: 'きしゃ', image: img('train.png') },
+      { id: 'hot-air-balloon', name: 'ききゅう', image: img('hot-air-balloon.png') },
     ],
   },
   {
@@ -41,6 +42,7 @@ export const themes: Theme[] = [
       { id: 'astronaut', name: 'うちゅうひこうし', image: img('astronaut.png') },
       { id: 'alien-ufo', name: 'うちゅうじん', image: img('alien-ufo.png') },
       { id: 'rocket', name: 'ロケット', image: img('rocket.png') },
+      { id: 'sun', name: 'おひさま', image: img('sun.png') },
     ],
   },
   {
@@ -58,6 +60,7 @@ export const themes: Theme[] = [
       { id: 'cat', name: 'ねこ', image: img('cat.png') },
       { id: 'cat2', name: 'ねこ（おすわり）', image: img('cat2.png') },
       { id: 'raccoon-dog', name: 'たぬき', image: img('raccoon-dog.png') },
+      { id: 'penguin', name: 'ペンギン', image: img('penguin.png') },
     ],
   },
   {
@@ -66,6 +69,7 @@ export const themes: Theme[] = [
     artworks: [
       { id: 'whale', name: 'くじら', image: img('whale.png') },
       { id: 'dolphin', name: 'いるか', image: img('dolphin.png') },
+      { id: 'submarine', name: 'せんすいかん', image: img('submarine.png') },
     ],
   },
 ];
