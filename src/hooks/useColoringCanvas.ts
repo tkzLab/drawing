@@ -1,26 +1,27 @@
 import { useEffect, useRef } from 'react';
-import { Tool } from '../types';
+import { paintStyle } from '../coloring/glitter';
+import { Paint, Tool } from '../types';
 
 const LINE_WIDTH = 12;
 const MAX_HISTORY = 25;
 
 interface Params {
   canvasRef: React.RefObject<HTMLCanvasElement>;
-  color: string;
+  paint: Paint;
   tool: Tool;
 }
 
 // Free-drawing canvas for the おえかき mode: pen + eraser with a consistent
 // undo history. (No bucket — that lives in the image-based ぬりえ canvas.)
-export const useColoringCanvas = ({ canvasRef, color, tool }: Params) => {
+export const useColoringCanvas = ({ canvasRef, paint, tool }: Params) => {
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
   const isStrokingRef = useRef(false);
   const historyRef = useRef<ImageData[]>([]);
 
   const toolRef = useRef(tool);
-  const colorRef = useRef(color);
+  const paintRef = useRef(paint);
   toolRef.current = tool;
-  colorRef.current = color;
+  paintRef.current = paint;
 
   const setupCanvas = () => {
     const canvas = canvasRef.current;
@@ -68,7 +69,7 @@ export const useColoringCanvas = ({ canvasRef, color, tool }: Params) => {
 
     snapshot();
     ctx.globalCompositeOperation = toolRef.current === 'eraser' ? 'destination-out' : 'source-over';
-    ctx.strokeStyle = colorRef.current;
+    ctx.strokeStyle = paintStyle(ctx, paintRef.current);
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
     isStrokingRef.current = true;

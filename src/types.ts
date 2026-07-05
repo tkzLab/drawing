@@ -3,6 +3,13 @@
 // The tools available in the toolbar.
 export type Tool = 'bucket' | 'brush' | 'eraser';
 
+// What to paint with: a base color, optionally rendered as glitter (a sparkly
+// pattern generated from the color) instead of a flat fill.
+export interface Paint {
+  color: string; // hex like '#FF0000'
+  glitter: boolean;
+}
+
 // A line-art picture the child can color. The PNG provides both the visible
 // outline and (via its black lines) the boundaries for the bucket flood-fill,
 // so adding a character is just dropping in an image + one entry here.

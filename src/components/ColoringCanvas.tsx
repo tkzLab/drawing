@@ -1,19 +1,19 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { useColoringCanvas } from '../hooks/useColoringCanvas';
 import { overlayStyle, stageStyle } from './drawingStyles';
-import { CanvasHandle, Tool } from '../types';
+import { CanvasHandle, Paint, Tool } from '../types';
 
 interface ColoringCanvasProps {
   tool: Tool;
-  color: string;
+  paint: Paint;
 }
 
 // Blank free-drawing canvas for the おえかき mode (pen + eraser, no confinement).
-const ColoringCanvas = forwardRef<CanvasHandle, ColoringCanvasProps>(({ tool, color }, ref) => {
+const ColoringCanvas = forwardRef<CanvasHandle, ColoringCanvasProps>(({ tool, paint }, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { onPointerDown, onPointerMove, onPointerUp, undo, clear } = useColoringCanvas({
     canvasRef,
-    color,
+    paint,
     tool,
   });
 

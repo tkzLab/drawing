@@ -1,12 +1,12 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import './ImageColoringCanvas.css';
 import { useImageColoring } from '../hooks/useImageColoring';
-import { CanvasHandle, Tool } from '../types';
+import { CanvasHandle, Paint, Tool } from '../types';
 
 interface ImageColoringCanvasProps {
   image: string;
   tool: Tool;
-  color: string;
+  paint: Paint;
   onChange?: () => void;
 }
 
@@ -14,7 +14,7 @@ interface ImageColoringCanvasProps {
 // (bucket flood-fill + pen + eraser), the top shows the black outline so the
 // lines always stay crisp above the colors.
 const ImageColoringCanvas = forwardRef<CanvasHandle, ImageColoringCanvasProps>(
-  ({ image, tool, color, onChange }, ref) => {
+  ({ image, tool, paint, onChange }, ref) => {
     const colorRef = useRef<HTMLCanvasElement>(null);
     const lineRef = useRef<HTMLCanvasElement>(null);
     const { onPointerDown, onPointerMove, onPointerUp, undo, clear } = useImageColoring({
@@ -22,7 +22,7 @@ const ImageColoringCanvas = forwardRef<CanvasHandle, ImageColoringCanvasProps>(
       lineRef,
       image,
       tool,
-      color,
+      paint,
       onChange,
     });
 

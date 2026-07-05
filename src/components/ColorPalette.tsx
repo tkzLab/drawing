@@ -1,5 +1,6 @@
 import React from 'react';
 import './ColorPalette.css';
+import { Paint } from '../types';
 
 const COLORS = [
   // あか〜ピンク系
@@ -19,19 +20,31 @@ const COLORS = [
 ];
 
 interface ColorPaletteProps {
-  selectedColor: string;
-  onSelectColor: (color: string) => void;
+  paint: Paint;
+  onPaintChange: (paint: Paint) => void;
 }
 
-const ColorPalette: React.FC<ColorPaletteProps> = ({ selectedColor, onSelectColor }) => {
+// The color rail. The ✨ toggle turns any selected color into glitter, so the
+// swatches preview a sparkle overlay while it is on.
+const ColorPalette: React.FC<ColorPaletteProps> = ({ paint, onPaintChange }) => {
   return (
     <>
+      <button
+        className={`glitter-toggle ${paint.glitter ? 'active' : ''}`}
+        onClick={() => onPaintChange({ ...paint, glitter: !paint.glitter })}
+        aria-pressed={paint.glitter}
+      >
+        <span aria-hidden="true">✨</span>
+        <span className="glitter-toggle-label">キラキラ</span>
+      </button>
       {COLORS.map(color => (
         <button
           key={color}
-          className={`color-swatch ${selectedColor === color ? 'selected' : ''}`}
+          className={`color-swatch ${paint.color === color ? 'selected' : ''} ${
+            paint.glitter ? 'glitter' : ''
+          }`}
           style={{ backgroundColor: color }}
-          onClick={() => onSelectColor(color)}
+          onClick={() => onPaintChange({ ...paint, color })}
           aria-label={`Color ${color}`}
         />
       ))}

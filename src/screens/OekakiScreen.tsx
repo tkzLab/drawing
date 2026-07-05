@@ -6,14 +6,14 @@ import ColoringCanvas from '../components/ColoringCanvas';
 import ImageColoringCanvas from '../components/ImageColoringCanvas';
 import ImageUploadButton from '../components/ImageUploadButton';
 import Toolbar from '../components/Toolbar';
-import { CanvasHandle, Tool } from '../types';
+import { CanvasHandle, Paint, Tool } from '../types';
 
 interface OekakiScreenProps {
   onBackHome: () => void;
 }
 
 const OekakiScreen: React.FC<OekakiScreenProps> = ({ onBackHome }) => {
-  const [color, setColor] = useState('#FF0000');
+  const [paint, setPaint] = useState<Paint>({ color: '#FF0000', glitter: false });
   const [tool, setTool] = useState<Tool>('brush');
   const [loadedImage, setLoadedImage] = useState<string | null>(null);
   // スマホ縦で上部メニューをたたんでキャンバスを広げられるように
@@ -61,13 +61,13 @@ const OekakiScreen: React.FC<OekakiScreenProps> = ({ onBackHome }) => {
       </aside>
       <main className="coloring-canvas">
         {loadedImage ? (
-          <ImageColoringCanvas key={loadedImage} ref={canvasRef} tool={tool} color={color} image={loadedImage} />
+          <ImageColoringCanvas key={loadedImage} ref={canvasRef} tool={tool} paint={paint} image={loadedImage} />
         ) : (
-          <ColoringCanvas ref={canvasRef} tool={tool} color={color} />
+          <ColoringCanvas ref={canvasRef} tool={tool} paint={paint} />
         )}
       </main>
       <aside className="color-palette">
-        <ColorPalette selectedColor={color} onSelectColor={setColor} />
+        <ColorPalette paint={paint} onPaintChange={setPaint} />
       </aside>
       <footer className="toolbar">
         <Toolbar

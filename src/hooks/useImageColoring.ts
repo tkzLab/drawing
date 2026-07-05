@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { Tool } from '../types';
+import { paintStyle } from '../coloring/glitter';
+import { Paint, Tool } from '../types';
 
 const MAX_DIM = 1000; // downscale source art for snappy flood-fill
 const LINE_THRESHOLD = 100; // luminance below this is treated as a line (a wall)
@@ -10,26 +11,17 @@ interface Params {
   colorRef: React.RefObject<HTMLCanvasElement>; // bottom layer: the colors
   lineRef: React.RefObject<HTMLCanvasElement>; // top layer: the black outline
   image: string;
-  color: string;
+  paint: Paint;
   tool: Tool;
   onChange?: () => void; // fired after a save so the selection grid can refresh its thumbnail
 }
-
-const hexToRgb = (hex: string) => {
-  const v = hex.replace('#', '');
-  return {
-    r: parseInt(v.slice(0, 2), 16),
-    g: parseInt(v.slice(2, 4), 16),
-    b: parseInt(v.slice(4, 6), 16),
-  };
-};
 
 // Coloring on a raster line-art image. The bucket tool flood-fills the area
 // enclosed by the black lines; the pen/eraser also stay within the line-bounded
 // area under the touch point (strokes never spill across the black lines).
 // Everything happens on one "color" canvas (outline kept crisp on a layer
 // above), so undo and clear behave consistently.
-export const useImageColoring = ({ colorRef, lineRef, image, color, tool, onChange }: Params) => {
+export const useImageColoring = ({ colorRef, lineRef, image, paint, tool, onChange }: Params) => {
   const maskRef = useRef<Uint8Array | null>(null); // 1 = line/barrier
   const dimRef = useRef({ w: 0, h: 0 });
   const historyRef = useRef<ImageData[]>([]);
@@ -41,10 +33,10 @@ export const useImageColoring = ({ colorRef, lineRef, image, color, tool, onChan
   const scratchRef = useRef<HTMLCanvasElement | null>(null); // per-segment scratch
 
   const toolRef = useRef(tool);
-  const colorValRef = useRef(color);
+  const paintRef = useRef(paint);
   const onChangeRef = useRef(onChange);
   toolRef.current = tool;
-  colorValRef.current = color;
+  paintRef.current = paint;
   onChangeRef.current = onChange;
 
   // Persist the colored layer per artwork in the browser so reopening a picture
@@ -158,7 +150,7 @@ export const useImageColoring = ({ colorRef, lineRef, image, color, tool, onChan
       historyRef.current = [];
     };
     img.src = image;
-  }, [image, colorRef, lineRef]);
+  }, [image, storageKey, colorRef, lineRef]);
 
   const snapshot = () => {
     const canvas = colorRef.current;
@@ -206,25 +198,43 @@ export const useImageColoring = ({ colorRef, lineRef, image, color, tool, onChan
     return visited;
   };
 
+  // Write a computed region into the reusable mask canvas (alpha = inside).
+  const regionToMaskCanvas = (region: Uint8Array) => {
+    const regionCanvas = regionMaskCanvasRef.current;
+    const rctx = regionCanvas?.getContext('2d');
+    const { w, h } = dimRef.current;
+    if (!regionCanvas || !rctx || w === 0) return null;
+    const maskImg = rctx.createImageData(w, h);
+    for (let i = 0; i < w * h; i++) {
+      if (region[i]) maskImg.data[i * 4 + 3] = 255;
+    }
+    rctx.putImageData(maskImg, 0, 0);
+    return regionCanvas;
+  };
+
   const floodFill = (sx: number, sy: number) => {
     const canvas = colorRef.current;
     const ctx = canvas?.getContext('2d');
+    const scratch = scratchRef.current;
+    const sctx = scratch?.getContext('2d');
     const { w, h } = dimRef.current;
     const region = computeRegion(sx, sy);
-    if (!canvas || !ctx || !region) return;
+    if (!canvas || !ctx || !scratch || !sctx || !region) return;
+    const regionCanvas = regionToMaskCanvas(region);
+    if (!regionCanvas) return;
 
     snapshot();
-    const image = ctx.getImageData(0, 0, w, h);
-    const out = image.data;
-    const { r, g, b } = hexToRgb(colorValRef.current);
-    for (let i = 0; i < w * h; i++) {
-      if (!region[i]) continue;
-      out[i * 4] = r;
-      out[i * 4 + 1] = g;
-      out[i * 4 + 2] = b;
-      out[i * 4 + 3] = 255;
-    }
-    ctx.putImageData(image, 0, 0);
+    // Paint the whole scratch with the fill style (flat color or glitter
+    // pattern), keep only the clicked region, then stamp it onto the colors.
+    sctx.globalCompositeOperation = 'source-over';
+    sctx.clearRect(0, 0, w, h);
+    sctx.fillStyle = paintStyle(sctx, paintRef.current);
+    sctx.fillRect(0, 0, w, h);
+    sctx.globalCompositeOperation = 'destination-in';
+    sctx.drawImage(regionCanvas, 0, 0);
+    sctx.globalCompositeOperation = 'source-over';
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.drawImage(scratch, 0, 0);
     persist();
   };
 
@@ -249,7 +259,7 @@ export const useImageColoring = ({ colorRef, lineRef, image, color, tool, onChan
     sctx.lineCap = 'round';
     sctx.lineJoin = 'round';
     sctx.lineWidth = strokeWidth();
-    sctx.strokeStyle = colorValRef.current;
+    sctx.strokeStyle = paintStyle(sctx, paintRef.current);
     sctx.beginPath();
     sctx.moveTo(x0, y0);
     sctx.lineTo(x1, y1);
@@ -278,16 +288,7 @@ export const useImageColoring = ({ colorRef, lineRef, image, color, tool, onChan
 
     // Pen / eraser: lock to the region under the touch point.
     const region = computeRegion(p.x, p.y);
-    const regionCanvas = regionMaskCanvasRef.current;
-    const rctx = regionCanvas?.getContext('2d');
-    const { w, h } = dimRef.current;
-    if (!region || !regionCanvas || !rctx) return;
-
-    const maskImg = rctx.createImageData(w, h);
-    for (let i = 0; i < w * h; i++) {
-      if (region[i]) maskImg.data[i * 4 + 3] = 255;
-    }
-    rctx.putImageData(maskImg, 0, 0);
+    if (!region || !regionToMaskCanvas(region)) return;
 
     snapshot();
     prevRef.current = p;

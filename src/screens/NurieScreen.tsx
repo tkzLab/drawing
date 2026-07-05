@@ -5,7 +5,7 @@ import ColorPalette from '../components/ColorPalette';
 import ImageColoringCanvas from '../components/ImageColoringCanvas';
 import Toolbar from '../components/Toolbar';
 import { themes } from '../coloring/artworks';
-import { Artwork, CanvasHandle, Theme, Tool } from '../types';
+import { Artwork, CanvasHandle, Paint, Theme, Tool } from '../types';
 
 interface NurieScreenProps {
   onBackHome: () => void;
@@ -14,7 +14,7 @@ interface NurieScreenProps {
 const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
-  const [color, setColor] = useState('#FF0000');
+  const [paint, setPaint] = useState<Paint>({ color: '#FF0000', glitter: false });
   const [tool, setTool] = useState<Tool>('bucket');
   // スマホ縦で上部メニューをたたんでキャンバスを広げられるように
   const [menuOpen, setMenuOpen] = useState(true);
@@ -108,7 +108,7 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
             key={selectedArtwork.id}
             ref={canvasRef}
             tool={tool}
-            color={color}
+            paint={paint}
             image={selectedArtwork.image}
             onChange={() => bumpThumbs(n => n + 1)}
           />
@@ -117,7 +117,7 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
         )}
       </main>
       <aside className="color-palette">
-        <ColorPalette selectedColor={color} onSelectColor={setColor} />
+        <ColorPalette paint={paint} onPaintChange={setPaint} />
       </aside>
       <footer className="toolbar">
         <Toolbar
