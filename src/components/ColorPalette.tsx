@@ -2,21 +2,26 @@ import React from 'react';
 import './ColorPalette.css';
 import { Paint } from '../types';
 
+// 色鉛筆36色セット準拠。全ペアの RGB 距離 49 以上（ほぼ同色の重複なし）を
+// 機械検証済み。きんいろ・ぎんいろは きいろ/ぎんいろ×キラキラ で表現する。
 const COLORS = [
   // あか〜ピンク系
-  '#FF0000', '#E60050', '#FF5C8A', '#FFC0CB',
-  // オレンジ〜きいろ系
-  '#FF6F00', '#FFA500', '#FFD400', '#FFFF00',
+  '#E60012', '#E8491F', '#B22222', '#FF8A65',
+  '#F06292', '#F9A8C2', '#D5006D', '#880E4F',
+  // だいだい〜きいろ系
+  '#F28C00', '#FFB74D', '#FFBC00', '#FFF100',
+  '#FAF489', '#FCDCBB',
+  // アース系
+  '#B8860B', '#9C9C4E', '#8B4513', '#57371A',
   // みどり系
-  '#9ACD32', '#00C853', '#008000', '#006400',
+  '#D4E157', '#9CCC2E', '#C5E1A5', '#00A047',
+  '#1B5E20', '#80CBC4', '#00BFA5',
   // みず〜あお系
-  '#00FFFF', '#00B0FF', '#0000FF', '#1A237E',
+  '#B3E5FC', '#4FC3F7', '#1976D2', '#5C6BC0', '#283593',
   // むらさき系
-  '#8E24AA', '#800080', '#B388FF',
-  // ちゃ〜はだ系
-  '#A52A2A', '#8D5524', '#FFDBAC',
+  '#B39DDB', '#7B1FA2',
   // モノクロ系
-  '#000000', '#808080', '#C0C0C0', '#FFFFFF'
+  '#FFFFFF', '#C9CCD1', '#808A93', '#000000'
 ];
 
 interface ColorPaletteProps {
@@ -25,10 +30,13 @@ interface ColorPaletteProps {
 }
 
 // The color rail. The ✨ toggle turns any selected color into glitter, so the
-// swatches preview a sparkle overlay while it is on.
+// swatches preview a sparkle overlay while it is on. The toggle is a bar shaped
+// unlike the round swatches, pinned (sticky) at the scroll edge so it never
+// hides even if the palette overflows on short screens.
 const ColorPalette: React.FC<ColorPaletteProps> = ({ paint, onPaintChange }) => {
   return (
     <>
+      {/* DOMでは先頭(縦持ちで左端sticky)、横向きレールではCSSのorderで最下部へ */}
       <button
         className={`glitter-toggle ${paint.glitter ? 'active' : ''}`}
         onClick={() => onPaintChange({ ...paint, glitter: !paint.glitter })}

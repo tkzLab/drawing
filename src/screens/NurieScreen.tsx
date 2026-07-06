@@ -14,7 +14,7 @@ interface NurieScreenProps {
 const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
-  const [paint, setPaint] = useState<Paint>({ color: '#FF0000', glitter: false });
+  const [paint, setPaint] = useState<Paint>({ color: '#E60012', glitter: false });
   const [tool, setTool] = useState<Tool>('bucket');
   // スマホ縦で上部メニューをたたんでキャンバスを広げられるように
   const [menuOpen, setMenuOpen] = useState(true);

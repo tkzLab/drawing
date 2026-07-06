@@ -58,24 +58,27 @@
   box-shadow: 0 3px 0 rgba(214, 51, 132, 0.35);
 }
 
-/* --- 横向き(タブレット): 右レールに縦積み --- */
+/* --- 横向き(タブレット): キャンバス下の横バー。ツール群とアクション群を
+       間隔で区切り、誤タップを防ぐ --- */
 @media (min-width: 768px) and (orientation: landscape) {
   .toolbar-container {
-    flex-direction: column;
-    gap: 12px;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
   }
 
   .tool-selection,
   .action-buttons {
-    flex-direction: column;
-    width: 100%;
-    gap: 10px;
+    flex-direction: row;
+    gap: 8px;
   }
 
+  /* 5ボタン+間隔がキャンバス列幅(約678px)に1行で収まるサイズに保つ
+     (折り返すとバーが縦に膨らみキャンバスを圧迫する) */
   .tool-button,
   .action-button {
-    width: 100%;
-    padding: 12px 8px;
-    font-size: 0.9em;
+    padding: 10px 12px;
+    font-size: 0.88em;
+    white-space: nowrap;
   }
 }

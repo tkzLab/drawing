@@ -114,13 +114,13 @@
 @media (min-width: 768px) and (orientation: landscape) {
   .app-container {
     display: grid;
-    /* 左:絵柄えらび / 中央:キャンバス / 右:ツール+パレットのレール。
-       ツールバーを下段から外し、キャンバスを2行ぶち抜きで全高化する。 */
-    grid-template-columns: 168px 1fr 132px;
-    grid-template-rows: auto 1fr;
+    /* 左:絵柄えらび / 中央:キャンバス+下部ツールバー / 右:パレット専用レール。
+       ツールを下部バーに寄せ、右レールは36色+キラキラを3列で全部見せる。 */
+    grid-template-columns: 168px 1fr 178px;
+    grid-template-rows: 1fr auto;
     grid-template-areas:
-      "selector canvas tools"
-      "selector canvas palette";
+      "selector canvas palette"
+      "selector tools palette";
     height: 100dvh;
     max-width: 1366px;
     margin: auto;
@@ -130,7 +130,7 @@
   }
 
   .coloring-canvas {
-    grid-area: canvas; /* 縦2行スパン = 画面全高 → 縦長の絵が大きく表示される */
+    grid-area: canvas;
     padding: 20px;
     border-left: 2px solid #ffe1ef;
     border-right: 2px solid #ffe1ef;
@@ -166,24 +166,27 @@
   }
 
   .toolbar {
-    grid-area: tools; /* 右レール上部 */
-    border-top: none;
+    grid-area: tools; /* キャンバス下の横バー */
+    border-top: 2px solid #ffe1ef;
+    border-left: 2px solid #ffe1ef;
+    border-right: 2px solid #ffe1ef;
     box-shadow: none;
-    padding: 16px 12px 8px;
+    padding: 8px 14px;
   }
 
   .color-palette {
-    grid-area: palette; /* 右レール残り(縦スクロール) */
-    /* 2列グリッドにして、入りきらない色は縦スクロールで全部出す */
+    grid-area: palette; /* 右レール全体 */
+    /* 3列×46pxで36色+キラキラがスクロールなしで収まる(1024×768時)。
+       色が増えたり背の低い端末では縦スクロールに自然に戻る */
     display: grid;
-    grid-template-columns: repeat(2, max-content);
+    grid-template-columns: repeat(3, max-content);
     align-content: start;
     justify-content: center;
     border: none;
     box-shadow: none;
     overflow-y: auto;
     overflow-x: hidden;
-    gap: 14px;
-    padding: 8px 12px 18px;
+    gap: 8px;
+    padding: 8px 10px 10px;
   }
 }

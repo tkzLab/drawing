@@ -13,7 +13,7 @@ interface OekakiScreenProps {
 }
 
 const OekakiScreen: React.FC<OekakiScreenProps> = ({ onBackHome }) => {
-  const [paint, setPaint] = useState<Paint>({ color: '#FF0000', glitter: false });
+  const [paint, setPaint] = useState<Paint>({ color: '#E60012', glitter: false });
   const [tool, setTool] = useState<Tool>('brush');
   const [loadedImage, setLoadedImage] = useState<string | null>(null);
   // スマホ縦で上部メニューをたたんでキャンバスを広げられるように
