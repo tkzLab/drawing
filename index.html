@@ -11,6 +11,9 @@
     <style>
     #portal-link{position:fixed;top:10px;left:10px;z-index:9999;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.92);color:#555;font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 2px 6px rgba(0,0,0,.18);font-family:sans-serif;}
     #portal-link:hover{background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.28);}
+    /* 塗り・おえかき中(キャンバスがある画面)は隠す: 左上の「もどる」やツール類と
+       重なって誤タップで作業画面から離脱してしまうのを防ぐ。ポータルへはホーム経由で */
+    body:has(canvas) #portal-link{display:none;}
     </style>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

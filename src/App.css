@@ -82,6 +82,14 @@
   margin: 0 auto;
 }
 
+/* 狭い画面では左上固定の「ぽーたるへ」リンク(index.html)が一覧の
+   「もどる」ボタンに重なるため、一覧表示時は先頭に逃げしろを取る */
+@media (max-width: 980px) {
+  .app-container.no-artwork .selector-container {
+    padding-top: 40px;
+  }
+}
+
 /* たたんだ状態: トグルだけ残してメニュー本体を隠し、キャンバスを最大化 */
 .drawing-selector.collapsed {
   max-height: none;
