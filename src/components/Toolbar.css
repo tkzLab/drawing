@@ -1,84 +1,11 @@
-.toolbar-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-}
-
-.tool-selection,
-.action-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-}
-
-.tool-button,
-.action-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 48px;
-  padding: 8px 16px;
-  font-size: 0.95em;
-  font-weight: bold;
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12);
-}
-
-.btn-icon {
-  font-size: 1.3em;
-  line-height: 1;
-}
-
-.tool-button {
-  background-color: #4dabf7;
-}
-
-.action-button {
-  background-color: #ffb703;
-}
-
-.tool-button:active,
-.action-button:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
-}
-
-.tool-button.active {
-  background-color: #ff7eb6; /* 選択中はアクセントのピンクで目立たせる */
-  box-shadow: 0 3px 0 rgba(214, 51, 132, 0.35);
-}
-
-/* --- 横向き(タブレット): キャンバス下の横バー。ツール群とアクション群を
-       間隔で区切り、誤タップを防ぐ --- */
-@media (min-width: 768px) and (orientation: landscape) {
-  .toolbar-container {
-    flex-direction: row;
-    justify-content: center;
-    gap: 20px;
-  }
-
-  .tool-selection,
-  .action-buttons {
-    flex-direction: row;
-    gap: 8px;
-  }
-
-  /* 5ボタン+間隔がキャンバス列幅(約678px)に1行で収まるサイズに保つ
-     (折り返すとバーが縦に膨らみキャンバスを圧迫する) */
-  .tool-button,
-  .action-button {
-    padding: 10px 12px;
-    font-size: 0.88em;
-    white-space: nowrap;
-  }
-}
+.toolbar-container { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; }
+.tool-selection, .action-buttons { display:flex; align-items:center; gap:8px; }
+.tool-selection { padding:8px; border:2px solid #eee0e8; border-radius:25px; background:rgba(255,255,255,.96); box-shadow:0 8px 18px rgba(77,59,87,.12); }
+.action-buttons { padding-left:10px; border-left:2px solid #eee4eb; }
+.tool-button { position:relative; display:grid; place-items:center; gap:1px; min-width:68px; min-height:62px; padding:5px 8px; border:2px solid transparent; border-radius:16px; color:#3e4266; background:#fff; cursor:pointer; font:800 11px inherit; }
+.btn-icon { width:34px; height:34px; object-fit:contain; }
+.btn-label { line-height:1.1; white-space:nowrap; }
+.tool-button.active { border-color:#f46f9b; background:#fff2f6; box-shadow:0 3px 0 #df4d81; transform:translateY(-2px); }
+.action-button { display:grid; place-items:center; width:46px; height:46px; padding:0; border:0; border-radius:50%; background:#f5f1f5; color:#756b7e; cursor:pointer; box-shadow:0 2px 0 #ded4df; }.action-button .btn-icon { width:auto; height:auto; font-size:22px; }.action-button .btn-label { display:none; }.action-button--clear { background:#fff0f4; color:#d55c82; }
+.tool-button:focus-visible,.action-button:focus-visible { outline:3px solid #70c9ed; outline-offset:2px; }
+@media (max-width:767px), (orientation:portrait) { .toolbar-container { gap:6px; flex-wrap:wrap; }.tool-selection { width:100%; justify-content:space-between; border-radius:19px; padding:6px; }.tool-button { min-width:0; flex:1; min-height:58px; padding:4px 2px; font-size:10px; }.action-buttons { border-left:0; padding-left:0; }.action-button { width:42px; height:42px; } }

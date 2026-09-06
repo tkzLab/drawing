@@ -20,7 +20,7 @@ const ColoringCanvas = forwardRef<CanvasHandle, ColoringCanvasProps>(({ tool, pa
   useImperativeHandle(ref, () => ({ undo, clear }), [undo, clear]);
 
   return (
-    <div style={stageStyle}>
+    <div className="free-stage" style={stageStyle}>
       <canvas
         ref={canvasRef}
         style={{ ...overlayStyle, touchAction: 'none' }}

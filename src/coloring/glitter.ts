@@ -9,6 +9,7 @@ import { Paint } from '../types';
 const TILE = 96;
 
 const tileCache = new Map<string, HTMLCanvasElement>();
+const brushTileCache = new Map<string, HTMLCanvasElement>();
 
 const hexToRgb = (hex: string) => {
   const v = hex.replace('#', '');
@@ -89,3 +90,46 @@ export const paintStyle = (
   if (!paint.glitter) return paint.color;
   return ctx.createPattern(glitterTile(paint.color), 'repeat') ?? paint.color;
 };
+
+// A dry, crayon-like brush. The transparent flecks deliberately let a little
+// of the paper show through, so a broad brush stroke feels different from the
+// smooth pen while remaining compatible with glitter colors.
+const dryBrushTile = (paint: Paint): HTMLCanvasElement => {
+  const key = `${paint.color}:${paint.glitter}`;
+  const cached = brushTileCache.get(key);
+  if (cached) return cached;
+
+  const tile = document.createElement('canvas');
+  tile.width = TILE;
+  tile.height = TILE;
+  const ctx = tile.getContext('2d')!;
+  const { r, g, b } = hexToRgb(paint.color);
+  const rand = mulberry32(r * 65536 + g * 256 + b + (paint.glitter ? 1 : 0));
+  const base = paint.glitter ? paintStyle(ctx, paint) : paint.color;
+
+  // Short, uneven strokes create a tactile crayon grain without a separate
+  // bitmap asset. Their placement is seeded so saved artwork is stable.
+  ctx.lineCap = 'round';
+  for (let y = 3; y < TILE; y += 5) {
+    let x = -8 + rand() * 12;
+    while (x < TILE) {
+      ctx.globalAlpha = 0.45 + rand() * 0.48;
+      ctx.strokeStyle = base;
+      ctx.lineWidth = 1.2 + rand() * 2.4;
+      const length = 8 + rand() * 22;
+      ctx.beginPath();
+      ctx.moveTo(x, y + rand() * 2 - 1);
+      ctx.lineTo(x + length, y + rand() * 2 - 1);
+      ctx.stroke();
+      x += length + 2 + rand() * 9;
+    }
+  }
+  ctx.globalAlpha = 1;
+  brushTileCache.set(key, tile);
+  return tile;
+};
+
+export const dryBrushStyle = (
+  ctx: CanvasRenderingContext2D,
+  paint: Paint
+): string | CanvasPattern => ctx.createPattern(dryBrushTile(paint), 'repeat') ?? paint.color;

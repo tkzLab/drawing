@@ -198,3 +198,43 @@
     padding: 8px 10px 10px;
   }
 }
+
+/* iPad-first workbench: the picture, colors, and tools each get a dedicated
+   place so children can keep their attention on the canvas. */
+.app-container { background:radial-gradient(#f2e7ee 1px,transparent 1px),linear-gradient(135deg,#fff9fc,#f2fbff); background-size:17px 17px,auto; }
+.drawing-selector,.color-palette,.toolbar { background:rgba(255,255,255,.94); }
+.selector-toggle { color:#a45073; background:#fff0f6; }
+.coloring-canvas { background:transparent; }
+@media (min-width:768px) and (orientation:landscape) {
+  .app-container { grid-template-columns:174px 1fr 184px; grid-template-rows:1fr auto; max-width:1024px; border-radius:0; box-shadow:none; }
+  .drawing-selector { padding:18px 13px; background:#fffafd; }
+  .color-palette { padding:16px 14px; background:#fbfdff; }
+  .coloring-canvas { padding:22px 28px 96px; }
+  .toolbar { margin:0; padding:10px 16px 16px; background:transparent; border:0; }
+  .toolbar-container { justify-content:center; }
+
+  .coloring-canvas { position:relative; padding:34px 34px 108px; background:
+    radial-gradient(circle at 7% 78%, #f58caf 0 5px, transparent 6px),
+    radial-gradient(circle at 12% 82%, #ffd252 0 4px, transparent 5px),
+    radial-gradient(circle at 91% 24%, #79cceb 0 5px, transparent 6px),
+    radial-gradient(circle at 94% 29%, #a289dd 0 3px, transparent 4px),
+    repeating-linear-gradient(102deg, transparent 0 18px, rgba(255,255,255,.36) 18px 20px, transparent 20px 38px),
+    linear-gradient(135deg,#faefd9,#fff8ed); }
+  /* A small clip lives on the frame, never over the drawable paper. The
+     generated paper-and-clip concept was intentionally not placed here: its
+     blue sheet would cover the child's line art. */
+  .coloring-canvas::before { content:''; position:absolute; z-index:4; top:16px; left:48px; width:38px; height:13px; pointer-events:none; border-radius:4px; background:linear-gradient(#ff9aba,#e96f98); box-shadow:0 2px 0 #c84f77,0 4px 7px rgba(92,58,70,.18); transform:rotate(-5deg); }
+  .coloring-canvas::after { content:''; position:absolute; z-index:4; top:4px; left:61px; width:10px; height:29px; pointer-events:none; border:3px solid #bfc2c9; border-bottom:0; border-radius:9px 9px 0 0; transform:rotate(-5deg); }
+  .coloring-canvas > .image-stage--paper,
+  .coloring-canvas > .free-stage { overflow:hidden; border:7px solid #80c6e7; border-radius:32px; background:#fffefb; box-shadow:0 8px 0 #d5aa8d,0 14px 28px rgba(104,77,65,.2); }
+  .drawing-selector { position:relative; overflow:hidden; background:linear-gradient(90deg,#f6d3da 0 18px,#fff2f5 18px); }
+  .drawing-selector::before { content:''; position:absolute; top:18px; left:5px; bottom:18px; width:10px; background:radial-gradient(circle,#f0aaad 0 3px,transparent 4px) center / 10px 22px repeat-y; opacity:.8; }
+  .drawing-selector .selector-container { padding-left:12px; }
+  .color-palette { position:relative; background:linear-gradient(90deg,#f3e2c8,#fff9eb 22%,#fffdf5); box-shadow:inset 2px 0 rgba(166,122,75,.12); }
+  .color-palette::after { content:''; position:absolute; top:22px; right:17px; left:105px; height:7px; border-radius:8px; background:repeating-linear-gradient(96deg,#85c8e8 0 3px,#b4dff1 3px 6px); opacity:.75; pointer-events:none; }
+  .color-palette::before { margin-top:18px; }
+  .color-swatch { box-shadow:0 3px 0 #c9b69e,0 5px 8px rgba(101,77,60,.16); }
+  .glitter-toggle { box-shadow:0 3px 0 #d6ad53,0 5px 8px rgba(101,77,60,.15); }
+  .toolbar { position:relative; z-index:5; }
+  .tool-selection { border-color:#eed9c9; background:linear-gradient(135deg,#fffaf1,#f8ead9); box-shadow:0 5px 0 #d8b797,0 10px 18px rgba(96,67,50,.18); }
+}

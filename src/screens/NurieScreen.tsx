@@ -121,7 +121,7 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
       </aside>
       <footer className="toolbar">
         <Toolbar
-          tools={['bucket', 'brush', 'eraser']}
+          tools={['bucket', 'brush', 'paintbrush', 'eraser']}
           currentTool={tool}
           onToolChange={setTool}
           onUndo={() => canvasRef.current?.undo()}

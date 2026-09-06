@@ -71,7 +71,7 @@ const OekakiScreen: React.FC<OekakiScreenProps> = ({ onBackHome }) => {
       </aside>
       <footer className="toolbar">
         <Toolbar
-          tools={loadedImage ? ['bucket', 'brush', 'eraser'] : ['brush', 'eraser']}
+          tools={loadedImage ? ['bucket', 'brush', 'paintbrush', 'eraser'] : ['brush', 'paintbrush', 'eraser']}
           currentTool={tool}
           onToolChange={setTool}
           onUndo={() => canvasRef.current?.undo()}

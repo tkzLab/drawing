@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { paintStyle } from '../coloring/glitter';
+import { dryBrushStyle, paintStyle } from '../coloring/glitter';
 import { Paint, Tool } from '../types';
 
 const MAX_DIM = 1000; // downscale source art for snappy flood-fill
@@ -240,7 +240,8 @@ export const useImageColoring = ({ colorRef, lineRef, image, paint, tool, onChan
 
   const strokeWidth = () => {
     const { w, h } = dimRef.current;
-    return Math.max(2, Math.max(w, h) * STROKE_RATIO);
+    const ratio = toolRef.current === 'paintbrush' ? STROKE_RATIO * 3 : STROKE_RATIO;
+    return Math.max(2, Math.max(w, h) * ratio);
   };
 
   // Draw one stroke segment, masked to the region picked at pointer-down, onto
@@ -259,7 +260,9 @@ export const useImageColoring = ({ colorRef, lineRef, image, paint, tool, onChan
     sctx.lineCap = 'round';
     sctx.lineJoin = 'round';
     sctx.lineWidth = strokeWidth();
-    sctx.strokeStyle = paintStyle(sctx, paintRef.current);
+    sctx.strokeStyle = toolRef.current === 'paintbrush'
+      ? dryBrushStyle(sctx, paintRef.current)
+      : paintStyle(sctx, paintRef.current);
     sctx.beginPath();
     sctx.moveTo(x0, y0);
     sctx.lineTo(x1, y1);

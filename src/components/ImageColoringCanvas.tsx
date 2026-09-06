@@ -29,7 +29,7 @@ const ImageColoringCanvas = forwardRef<CanvasHandle, ImageColoringCanvasProps>(
     useImperativeHandle(ref, () => ({ undo, clear }), [undo, clear]);
 
     return (
-      <div className="image-stage">
+      <div className="image-stage image-stage--paper">
         <canvas
           ref={colorRef}
           className="image-layer image-layer--color"

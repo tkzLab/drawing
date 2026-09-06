@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
-import { paintStyle } from '../coloring/glitter';
+import { dryBrushStyle, paintStyle } from '../coloring/glitter';
 import { Paint, Tool } from '../types';
 
 const LINE_WIDTH = 12;
+const BRUSH_WIDTH = 34;
 const MAX_HISTORY = 25;
 
 interface Params {
@@ -69,7 +70,10 @@ export const useColoringCanvas = ({ canvasRef, paint, tool }: Params) => {
 
     snapshot();
     ctx.globalCompositeOperation = toolRef.current === 'eraser' ? 'destination-out' : 'source-over';
-    ctx.strokeStyle = paintStyle(ctx, paintRef.current);
+    ctx.lineWidth = toolRef.current === 'paintbrush' ? BRUSH_WIDTH : LINE_WIDTH;
+    ctx.strokeStyle = toolRef.current === 'paintbrush'
+      ? dryBrushStyle(ctx, paintRef.current)
+      : paintStyle(ctx, paintRef.current);
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
     isStrokingRef.current = true;

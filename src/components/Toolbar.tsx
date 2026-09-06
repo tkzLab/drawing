@@ -5,13 +5,15 @@ import { Tool } from '../types';
 const TOOL_LABELS: Record<Tool, string> = {
   bucket: 'バケツ',
   brush: 'ペン',
+  paintbrush: 'ブラシ',
   eraser: 'けしゴム',
 };
 
 const TOOL_ICONS: Record<Tool, string> = {
-  bucket: '🪣',
-  brush: '✏️',
-  eraser: '🧽',
+  bucket: `${import.meta.env.BASE_URL}ui/tools/bucket.png`,
+  brush: `${import.meta.env.BASE_URL}ui/tools/pencil.png`,
+  paintbrush: `${import.meta.env.BASE_URL}ui/tools/paintbrush.png`,
+  eraser: `${import.meta.env.BASE_URL}ui/tools/eraser.png`,
 };
 
 interface ToolbarProps {
@@ -32,17 +34,17 @@ const Toolbar: React.FC<ToolbarProps> = ({ tools, currentTool, onToolChange, onU
             className={`tool-button ${currentTool === tool ? 'active' : ''}`}
             onClick={() => onToolChange(tool)}
           >
-            <span className="btn-icon" aria-hidden="true">{TOOL_ICONS[tool]}</span>
+            <img className="btn-icon" src={TOOL_ICONS[tool]} alt="" aria-hidden="true" />
             <span className="btn-label">{TOOL_LABELS[tool]}</span>
           </button>
         ))}
       </div>
       <div className="action-buttons">
-        <button className="action-button" onClick={onUndo}>
+        <button className="action-button action-button--undo" onClick={onUndo} aria-label="もどす">
           <span className="btn-icon" aria-hidden="true">↩️</span>
-          <span className="btn-label">やりなおし</span>
+          <span className="btn-label">もどす</span>
         </button>
-        <button className="action-button" onClick={onClear}>
+        <button className="action-button action-button--clear" onClick={onClear} aria-label="ぜんぶけす">
           <span className="btn-icon" aria-hidden="true">🗑️</span>
           <span className="btn-label">ぜんぶけす</span>
         </button>

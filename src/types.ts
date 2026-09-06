@@ -1,7 +1,7 @@
 // src/types.ts
 
 // The tools available in the toolbar.
-export type Tool = 'bucket' | 'brush' | 'eraser';
+export type Tool = 'bucket' | 'brush' | 'paintbrush' | 'eraser';
 
 // What to paint with: a base color, optionally rendered as glitter (a sparkly
 // pattern generated from the color) instead of a flat fill.
