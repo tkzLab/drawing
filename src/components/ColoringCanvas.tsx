@@ -17,7 +17,9 @@ const ColoringCanvas = forwardRef<CanvasHandle, ColoringCanvasProps>(({ tool, pa
     tool,
   });
 
-  useImperativeHandle(ref, () => ({ undo, clear }), [undo, clear]);
+  // Zoom controls are only shown in ぬりえ. Keep the common handle shape so
+  // おえかき remains independent from that optional feature.
+  useImperativeHandle(ref, () => ({ undo, clear, zoomIn: () => {}, zoomOut: () => {}, resetZoom: () => {} }), [undo, clear]);
 
   return (
     <div className="free-stage" style={stageStyle}>

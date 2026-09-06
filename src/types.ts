@@ -30,4 +30,7 @@ export interface Theme {
 export interface CanvasHandle {
   undo: () => void;
   clear: () => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
+  resetZoom: () => void;
 }

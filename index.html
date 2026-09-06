@@ -13,7 +13,9 @@
     #portal-link:hover{background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.28);}
     /* 塗り・おえかき中(キャンバスがある画面)は隠す: 左上の「もどる」やツール類と
        重なって誤タップで作業画面から離脱してしまうのを防ぐ。ポータルへはホーム経由で */
-    body:has(canvas) #portal-link{display:none;}
+    body:has(canvas) #portal-link,
+    /* ぬりえの選択画面では、アプリ内の「← あそびをえらぶ」を唯一の戻り先にする。 */
+    body:has(.nurie-picker-page) #portal-link{display:none;}
     </style>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

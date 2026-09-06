@@ -14,7 +14,7 @@ interface NurieScreenProps {
 const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
-  const [pickerOpen, setPickerOpen] = useState(false);
+  const [completeOpen, setCompleteOpen] = useState(false);
   const [paint, setPaint] = useState<Paint>({ color: '#E60012', glitter: false });
   const [tool, setTool] = useState<Tool>('bucket');
   const [, bumpThumbs] = useState(0);
@@ -32,71 +32,69 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   const selectArtwork = (artwork: Artwork) => {
     setSelectedArtwork(artwork);
     setTool('bucket');
-    setPickerOpen(false);
   };
 
-  const picker = (
-    <div className="art-picker-content">
-      <header className="art-picker-header">
-        {selectedArtwork ? (
-          <h2>えをえらぶ</h2>
-        ) : (
-          <button className="picker-home" onClick={onBackHome}>← あそびをえらぶ</button>
-        )}
-        {selectedArtwork && (
-          <button className="picker-close" onClick={() => setPickerOpen(false)} aria-label="絵選びを閉じる">
-            × <span>とじる</span>
-          </button>
-        )}
-      </header>
-      <div className="theme-chips" aria-label="テーマをえらぶ">
-        {themes.map(theme => (
-          <button
-            key={theme.id}
-            className={selectedTheme?.id === theme.id ? 'active' : ''}
-            onClick={() => setSelectedTheme(theme)}
-            aria-pressed={selectedTheme?.id === theme.id}
-          >
-            {theme.name}
-          </button>
-        ))}
-      </div>
-      {selectedTheme ? (
-        <div className="picker-art-grid" aria-label={`${selectedTheme.name}のぬりえ`}>
-          {selectedTheme.artworks.map(artwork => (
-            <button
-              key={artwork.id}
-              className={selectedArtwork?.id === artwork.id ? 'selected' : ''}
-              onClick={() => selectArtwork(artwork)}
-              aria-label={artwork.name}
-            >
-              <img src={thumbSrc(artwork.image)} alt={artwork.name} loading="eager" />
-              <span>{artwork.name}</span>
-            </button>
-          ))}
-        </div>
-      ) : (
-        <p className="picker-hint">テーマを えらんでね</p>
-      )}
-    </div>
-  );
+  const chooseNextArtwork = () => {
+    setCompleteOpen(false);
+    setSelectedArtwork(null);
+  };
+
+  if (!selectedTheme) {
+    return (
+      <section className="nurie-picker-page nurie-theme-page" aria-label="テーマをえらぶ">
+        <header className="nurie-picker-header">
+          <button type="button" className="nurie-back-button" onClick={onBackHome}>← あそびをえらぶ</button>
+          <h1>ぬりえ</h1>
+        </header>
+        <main className="nurie-picker-main">
+          <h2>どれで あそぶ？</h2>
+          <p>すきな えを ひとつ おしてね</p>
+          <div className="theme-card-grid">
+            {themes.map(theme => (
+              <button
+                key={theme.id}
+                type="button"
+                className={`theme-picture-card theme-picture-card--${theme.id}`}
+                onClick={() => setSelectedTheme(theme)}
+                aria-label={`${theme.name}のぬりえをえらぶ`}
+              >
+                <img src={thumbSrc(theme.artworks[0]?.image)} alt="" />
+                <span>{theme.name}</span>
+              </button>
+            ))}
+          </div>
+        </main>
+      </section>
+    );
+  }
+
+  if (!selectedArtwork) {
+    return (
+      <section className="nurie-picker-page nurie-artwork-page" aria-label={`${selectedTheme.name}のぬりえをえらぶ`}>
+        <header className="nurie-picker-header">
+          <button type="button" className="nurie-back-button" onClick={() => setSelectedTheme(null)}>← テーマをえらぶ</button>
+          <h1>{selectedTheme.name}の ぬりえ</h1>
+        </header>
+        <main className="nurie-picker-main">
+          <h2>すきな えを おしてね</h2>
+          <div className="artwork-card-grid">
+            {selectedTheme.artworks.map(artwork => (
+              <button key={artwork.id} type="button" className="artwork-picture-card" onClick={() => selectArtwork(artwork)}>
+                <img src={thumbSrc(artwork.image)} alt="" loading="eager" />
+                <span>{artwork.name}</span>
+              </button>
+            ))}
+          </div>
+        </main>
+      </section>
+    );
+  }
 
   return (
-    <div className={`app-container ${selectedArtwork ? '' : 'no-artwork'}`}>
-      {selectedArtwork ? (
-        <aside className="drawing-selector drawing-selector--compact">
-          <button className="art-picker-trigger" onClick={() => setPickerOpen(true)} aria-haspopup="dialog">
-            <img src={thumbSrc(selectedArtwork.image)} alt="" />
-            <span className="art-picker-trigger-name">{selectedArtwork.name}</span>
-            <span className="art-picker-trigger-action">えをえらぶ</span>
-          </button>
-        </aside>
-      ) : (
-        <aside className="drawing-selector">{picker}</aside>
-      )}
-      {pickerOpen && <section className="art-picker-sheet" role="dialog" aria-modal="true">{picker}</section>}
+    <div className="app-container nurie-workspace">
       <main className="coloring-canvas">
-        {selectedArtwork ? (
+        <button type="button" className="canvas-picker-back" onClick={() => setSelectedArtwork(null)}>← えをえらぶ</button>
+        <div className="canvas-stage-wrapper">
           <ImageColoringCanvas
             key={selectedArtwork.id}
             ref={canvasRef}
@@ -105,11 +103,11 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
             image={selectedArtwork.image}
             onChange={() => bumpThumbs(n => n + 1)}
           />
-        ) : (
-          <div className="placeholder-text">ぬりえをえらんでね！</div>
-        )}
+        </div>
       </main>
-      <aside className="color-palette"><ColorPalette paint={paint} onPaintChange={setPaint} /></aside>
+      <aside className="color-palette" aria-label="いろをえらぶ">
+        <ColorPalette paint={paint} onPaintChange={setPaint} />
+      </aside>
       <footer className="toolbar">
         <Toolbar
           tools={['bucket', 'brush', 'paintbrush', 'eraser']}
@@ -117,8 +115,23 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
           onToolChange={setTool}
           onUndo={() => canvasRef.current?.undo()}
           onClear={() => canvasRef.current?.clear()}
+          onZoomIn={() => canvasRef.current?.zoomIn()}
+          onZoomOut={() => canvasRef.current?.zoomOut()}
+          onResetZoom={() => canvasRef.current?.resetZoom()}
+          onComplete={() => setCompleteOpen(true)}
         />
       </footer>
+      {completeOpen && (
+        <section className="complete-overlay" role="dialog" aria-modal="true" aria-labelledby="complete-title">
+          <div className="complete-popup">
+            <button type="button" className="complete-close" onClick={() => setCompleteOpen(false)} aria-label="できたポップアップをとじる">×</button>
+            <div className="complete-star" aria-hidden="true">★</div>
+            <h2 id="complete-title">できた！</h2>
+            <button type="button" className="complete-next" onClick={chooseNextArtwork}>つぎの ぬりえ</button>
+            <button type="button" className="complete-end" onClick={onBackHome}>あそびを おわる</button>
+          </div>
+        </section>
+      )}
     </div>
   );
 };

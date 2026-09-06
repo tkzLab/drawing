@@ -22,9 +22,15 @@ interface ToolbarProps {
   onToolChange: (tool: Tool) => void;
   onUndo: () => void;
   onClear: () => void;
+  onZoomIn?: () => void;
+  onZoomOut?: () => void;
+  onResetZoom?: () => void;
+  onComplete?: () => void;
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({ tools, currentTool, onToolChange, onUndo, onClear }) => {
+const Toolbar: React.FC<ToolbarProps> = ({
+  tools, currentTool, onToolChange, onUndo, onClear, onZoomIn, onZoomOut, onResetZoom, onComplete,
+}) => {
   return (
     <div className="toolbar-container">
       <div className="tool-selection">
@@ -49,6 +55,18 @@ const Toolbar: React.FC<ToolbarProps> = ({ tools, currentTool, onToolChange, onU
           <span className="btn-label">ぜんぶけす</span>
         </button>
       </div>
+      {onZoomIn && onZoomOut && onResetZoom && (
+        <div className="zoom-buttons" aria-label="えを おおきく する">
+          <button className="zoom-button" onClick={onZoomOut} aria-label="ちいさくする">−</button>
+          <button className="zoom-reset" onClick={onResetZoom}>ぜんたい</button>
+          <button className="zoom-button" onClick={onZoomIn} aria-label="おおきくする">＋</button>
+        </div>
+      )}
+      {onComplete && (
+        <button type="button" className="toolbar-complete" onClick={onComplete}>
+          <span aria-hidden="true">★</span> できた！
+        </button>
+      )}
     </div>
   );
 };
