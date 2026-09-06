@@ -111,3 +111,26 @@
   font-size: 0.9em;
   color: #888;
 }
+
+/* A single, named action opens the picker. The category is a chip rather than
+   a separate navigation level, so children never need a "go back to themes"
+   button to change pictures. */
+.app-container { position: relative; }
+.drawing-selector--compact { justify-content: flex-start; }
+.art-picker-trigger { width:100%; display:flex; flex-direction:column; align-items:center; gap:7px; padding:10px 7px; border:0; border-radius:18px; color:#5d5365; background:#fff; box-shadow:0 3px 0 rgba(96,78,108,.13); cursor:pointer; font:800 12px inherit; }
+.art-picker-trigger img { width:100%; aspect-ratio:1; object-fit:contain; border-radius:12px; background:#fff8fb; }.art-picker-trigger-name { line-height:1.1; }.art-picker-trigger-action { padding:5px 8px; border-radius:12px; color:#a94c73; background:#fff0f6; font-size:10px; }
+.art-picker-sheet { position:absolute; z-index:20; display:flex; align-items:stretch; padding:16px; background:rgba(69,51,75,.22); backdrop-filter:blur(2px); }
+.art-picker-content { width:100%; min-height:0; padding:18px; border:3px solid #f1d7e1; border-radius:27px; background:linear-gradient(145deg,#fffdfb,#fff3f7); box-shadow:0 16px 35px rgba(67,47,73,.25); overflow:auto; }
+.art-picker-header { display:flex; align-items:center; justify-content:space-between; gap:12px; }.art-picker-header h2 { margin:0; color:#57475c; font-size:21px; }.picker-home,.picker-close { min-height:42px; padding:8px 13px; border:0; border-radius:15px; background:#f3edf3; color:#6e6173; cursor:pointer; font:800 13px inherit; }.picker-close { color:#ad4b72; background:#fff0f6; }.picker-close:first-letter { font-size:20px; }
+.theme-chips { display:flex; flex-wrap:wrap; gap:8px; margin:18px 0 14px; }.theme-chips button { min-height:42px; padding:7px 13px; border:2px solid #e9dfe8; border-radius:20px; color:#655a68; background:#fff; cursor:pointer; font:800 13px inherit; }.theme-chips button.active { border-color:#f46f9b; color:#a74169; background:#fff0f6; box-shadow:0 2px 0 #e35b88; }
+.picker-art-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:12px; }.picker-art-grid button { display:flex; flex-direction:column; align-items:center; gap:6px; min-height:140px; padding:9px; border:2px solid transparent; border-radius:18px; color:#5d5365; background:#fff; box-shadow:0 3px 0 rgba(96,78,108,.12); cursor:pointer; font:800 12px inherit; }.picker-art-grid button.selected { border-color:#f46f9b; background:#fff1f6; box-shadow:0 3px 0 #df4d81; }.picker-art-grid img { width:100%; min-height:0; flex:1; object-fit:contain; }.picker-hint { margin:42px 0; color:#8b7a8d; text-align:center; font-weight:800; }
+@media (min-width:768px) and (orientation:landscape) {
+  .drawing-selector--compact { padding:16px 12px; }
+  .art-picker-sheet { inset:20px 200px 20px 190px; }
+  .art-picker-content { padding:22px; }
+  .picker-art-grid { grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); }
+}
+@media (max-width:767px), (orientation:portrait) {
+  .drawing-selector--compact { max-height:none; overflow:visible; padding:8px; }.art-picker-trigger { flex-direction:row; justify-content:flex-start; min-height:54px; padding:6px 10px; }.art-picker-trigger img { width:42px; height:42px; aspect-ratio:auto; }.art-picker-trigger-action { margin-left:auto; }
+  .art-picker-sheet { inset:0; padding:10px; }.art-picker-content { padding:16px; border-radius:22px; }.picker-art-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; }.picker-art-grid button { min-height:120px; padding:6px; font-size:11px; }.theme-chips { gap:6px; margin:14px 0 12px; }.theme-chips button { min-height:42px; padding:5px 9px; font-size:11px; }
+}

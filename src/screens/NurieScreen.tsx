@@ -14,17 +14,12 @@ interface NurieScreenProps {
 const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [paint, setPaint] = useState<Paint>({ color: '#E60012', glitter: false });
   const [tool, setTool] = useState<Tool>('bucket');
-  // スマホ縦で上部メニューをたたんでキャンバスを広げられるように
-  const [menuOpen, setMenuOpen] = useState(true);
-  // 塗るたびに増やして、選択中のぬりえのサムネイルを塗り済み画像に再読込させる
   const [, bumpThumbs] = useState(0);
-
   const canvasRef = useRef<CanvasHandle>(null);
 
-  // Show the child's saved coloring as the thumbnail (falls back to the blank
-  // line art if they haven't colored it yet). Saved by useImageColoring.persist.
   const thumbSrc = (image: string | undefined) => {
     if (!image) return image;
     try {
@@ -37,71 +32,69 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   const selectArtwork = (artwork: Artwork) => {
     setSelectedArtwork(artwork);
     setTool('bucket');
-    setMenuOpen(false); // 選んだら自動でたたんで塗るスペースを広げる
+    setPickerOpen(false);
   };
 
-  let selector;
-  if (!selectedTheme) {
-    selector = (
-      <div className="selector-container">
-        <button className="back-button" onClick={onBackHome}>
-          ← ホームにもどる
-        </button>
-        <h2>テーマをえらんでね</h2>
-        <div className="button-grid">
-          {themes.map(theme => (
-            <button key={theme.id} className="theme-button" onClick={() => setSelectedTheme(theme)}>
-              <img className="thumb" src={thumbSrc(theme.artworks[0]?.image)} alt="" loading="lazy" />
-              <span className="thumb-label">{theme.name}</span>
-            </button>
-          ))}
-        </div>
+  const picker = (
+    <div className="art-picker-content">
+      <header className="art-picker-header">
+        {selectedArtwork ? (
+          <h2>えをえらぶ</h2>
+        ) : (
+          <button className="picker-home" onClick={onBackHome}>← あそびをえらぶ</button>
+        )}
+        {selectedArtwork && (
+          <button className="picker-close" onClick={() => setPickerOpen(false)} aria-label="絵選びを閉じる">
+            × <span>とじる</span>
+          </button>
+        )}
+      </header>
+      <div className="theme-chips" aria-label="テーマをえらぶ">
+        {themes.map(theme => (
+          <button
+            key={theme.id}
+            className={selectedTheme?.id === theme.id ? 'active' : ''}
+            onClick={() => setSelectedTheme(theme)}
+            aria-pressed={selectedTheme?.id === theme.id}
+          >
+            {theme.name}
+          </button>
+        ))}
       </div>
-    );
-  } else {
-    selector = (
-      <div className="selector-container">
-        <button
-          className="back-button"
-          onClick={() => {
-            setSelectedTheme(null);
-            setSelectedArtwork(null);
-            setMenuOpen(true);
-          }}
-        >
-          ← テーマにもどる
-        </button>
-        <h2>ぬりえをえらんでね</h2>
-        <div className="button-grid">
+      {selectedTheme ? (
+        <div className="picker-art-grid" aria-label={`${selectedTheme.name}のぬりえ`}>
           {selectedTheme.artworks.map(artwork => (
             <button
               key={artwork.id}
-              className={`drawing-button ${selectedArtwork?.id === artwork.id ? 'selected' : ''}`}
+              className={selectedArtwork?.id === artwork.id ? 'selected' : ''}
               onClick={() => selectArtwork(artwork)}
               aria-label={artwork.name}
             >
-              <img className="thumb" src={thumbSrc(artwork.image)} alt={artwork.name} loading="lazy" />
+              <img src={thumbSrc(artwork.image)} alt={artwork.name} loading="eager" />
+              <span>{artwork.name}</span>
             </button>
           ))}
         </div>
-      </div>
-    );
-  }
+      ) : (
+        <p className="picker-hint">テーマを えらんでね</p>
+      )}
+    </div>
+  );
 
   return (
     <div className={`app-container ${selectedArtwork ? '' : 'no-artwork'}`}>
-      <aside className={`drawing-selector ${menuOpen ? '' : 'collapsed'}`}>
-        {selectedArtwork && (
-          <button
-            className="selector-toggle"
-            onClick={() => setMenuOpen(open => !open)}
-            aria-expanded={menuOpen}
-          >
-            {menuOpen ? '▲ メニューをとじる' : `▼ ${selectedArtwork.name}をかえる`}
+      {selectedArtwork ? (
+        <aside className="drawing-selector drawing-selector--compact">
+          <button className="art-picker-trigger" onClick={() => setPickerOpen(true)} aria-haspopup="dialog">
+            <img src={thumbSrc(selectedArtwork.image)} alt="" />
+            <span className="art-picker-trigger-name">{selectedArtwork.name}</span>
+            <span className="art-picker-trigger-action">えをえらぶ</span>
           </button>
-        )}
-        <div className="selector-body">{selector}</div>
-      </aside>
+        </aside>
+      ) : (
+        <aside className="drawing-selector">{picker}</aside>
+      )}
+      {pickerOpen && <section className="art-picker-sheet" role="dialog" aria-modal="true">{picker}</section>}
       <main className="coloring-canvas">
         {selectedArtwork ? (
           <ImageColoringCanvas
@@ -116,9 +109,7 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
           <div className="placeholder-text">ぬりえをえらんでね！</div>
         )}
       </main>
-      <aside className="color-palette">
-        <ColorPalette paint={paint} onPaintChange={setPaint} />
-      </aside>
+      <aside className="color-palette"><ColorPalette paint={paint} onPaintChange={setPaint} /></aside>
       <footer className="toolbar">
         <Toolbar
           tools={['bucket', 'brush', 'paintbrush', 'eraser']}
