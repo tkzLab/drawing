@@ -66,6 +66,7 @@ export const themes: Theme[] = [
       { id: 'penguin', name: 'ペンギン', image: img('penguin.png') },
       { id: 'elephant', name: 'ぞう', image: img('elephant.png') },
       { id: 'butterfly', name: 'ちょうちょ', image: img('butterfly.png') },
+      { id: 'fuwafuwa-usagi', name: 'ふわふわうさぎ', image: img('fuwafuwa-usagi.jpg') },
     ],
   },
   {
