@@ -24,7 +24,10 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   const thumbSrc = (image: string | undefined) => {
     if (!image) return image;
     try {
-      return localStorage.getItem(`nurie-thumb:v1:${image}`) ?? image;
+      // v1 previews were only 160px and look jagged when iPad cards enlarge
+      // them. Do not read that cache; the original 1000px line art is sharper
+      // until a v2 preview is written after the next coloring action.
+      return localStorage.getItem(`nurie-thumb:v2:${image}`) ?? image;
     } catch {
       return image;
     }

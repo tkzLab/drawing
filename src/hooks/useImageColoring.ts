@@ -45,8 +45,11 @@ export const useImageColoring = ({ colorRef, lineRef, image, paint, tool, onChan
   const storageKey = `nurie-color:v1:${image}`;
   // A flattened "white bg + colors + outline" thumbnail so the selection grid can
   // show how far the child has colored each picture (see thumbKey usage in NurieScreen).
-  const thumbKey = `nurie-thumb:v1:${image}`;
-  const THUMB_MAX = 160;
+  // v2 intentionally ignores the old 160px preview cache. The selection cards
+  // are around 200 CSS px wide on iPad, so a 512px source stays crisp on a
+  // high-density display instead of being enlarged from a low-res thumbnail.
+  const thumbKey = `nurie-thumb:v2:${image}`;
+  const THUMB_MAX = 512;
   const persistThumb = () => {
     const colorCanvas = colorRef.current;
     const lineCanvas = lineRef.current;
@@ -60,6 +63,8 @@ export const useImageColoring = ({ colorRef, lineRef, image, paint, tool, onChan
     off.height = th;
     const octx = off.getContext('2d');
     if (!octx) return;
+    octx.imageSmoothingEnabled = true;
+    octx.imageSmoothingQuality = 'high';
     octx.fillStyle = '#fff';
     octx.fillRect(0, 0, tw, th);
     octx.drawImage(colorCanvas, 0, 0, tw, th);
