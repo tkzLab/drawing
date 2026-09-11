@@ -12,7 +12,6 @@
 .theme-picture-card--animals { background:#eef9f2; border-color:#93d2a7; }
 .theme-picture-card--sea { background:#e8f7fc; border-color:#8dcee7; }
 .artwork-picture-card { min-height:220px; border-color:#eee1d5; }
-.artwork-picture-card:nth-child(n+5) { grid-row:2; }
 
 .nurie-workspace { position:relative; }
 .nurie-workspace .coloring-canvas > div { width:auto; height:auto; }
