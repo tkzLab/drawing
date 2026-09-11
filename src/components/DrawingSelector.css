@@ -29,7 +29,7 @@
 
 @media (min-width:768px) and (orientation:landscape) {
   .nurie-workspace,.oekaki-workspace { grid-template-columns:minmax(0,1fr) clamp(164px,18vw,220px); grid-template-rows:minmax(0,1fr) auto; grid-template-areas:'canvas palette' 'tools palette'; max-width:none; }
-  .nurie-workspace .coloring-canvas,.oekaki-workspace .coloring-canvas { padding:64px 18px 14px; border-left:0; }
+  .nurie-workspace .coloring-canvas,.oekaki-workspace .coloring-canvas { padding:14px 18px; border-left:0; }
   .nurie-workspace .coloring-canvas::before,.nurie-workspace .coloring-canvas::after { display:none; }
   .nurie-workspace .toolbar,.oekaki-workspace .toolbar { border-right:2px solid #ffe1ef; }
 }
