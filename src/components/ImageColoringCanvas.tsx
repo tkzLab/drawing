@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef, useState, type PointerEvent } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useRef, useState, type PointerEvent } from 'react';
 import './ImageColoringCanvas.css';
 import { useImageColoring } from '../hooks/useImageColoring';
 import { CanvasHandle, Paint, Tool } from '../types';
@@ -32,7 +32,7 @@ const ImageColoringCanvas = forwardRef<CanvasHandle, ImageColoringCanvasProps>(
       onChange,
     });
 
-    const clampPan = (next: { x: number; y: number }, scale = zoom) => {
+    const clampPan = useCallback((next: { x: number; y: number }, scale = zoom) => {
       const stage = stageRef.current;
       if (!stage || scale <= 1) return { x: 0, y: 0 };
       const maxX = ((scale - 1) * stage.clientWidth) / 2;
@@ -41,13 +41,13 @@ const ImageColoringCanvas = forwardRef<CanvasHandle, ImageColoringCanvasProps>(
         x: Math.max(-maxX, Math.min(maxX, next.x)),
         y: Math.max(-maxY, Math.min(maxY, next.y)),
       };
-    };
+    }, [zoom]);
 
-    const zoomTo = (nextZoom: number) => {
+    const zoomTo = useCallback((nextZoom: number) => {
       const next = Math.max(1, Math.min(3, nextZoom));
       setZoom(next);
       setPan(current => clampPan(current, next));
-    };
+    }, [clampPan]);
 
     useImperativeHandle(ref, () => ({
       undo,
@@ -58,7 +58,7 @@ const ImageColoringCanvas = forwardRef<CanvasHandle, ImageColoringCanvasProps>(
         setZoom(1);
         setPan({ x: 0, y: 0 });
       },
-    }), [undo, clear, zoom]);
+    }), [undo, clear, zoom, zoomTo]);
 
     const pointerPosition = (event: PointerEvent<HTMLCanvasElement>) => ({
       x: event.clientX,

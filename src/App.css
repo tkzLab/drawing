@@ -32,7 +32,6 @@
   font-weight: bold;
 }
 
-.drawing-selector,
 .color-palette,
 .toolbar {
   padding: 10px;
@@ -52,83 +51,16 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.drawing-selector {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-height: 45dvh; /* 開いていても画面の半分弱まで。残りはキャンバスへ */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* 塗り絵を選んでいないあいだ(テーマ選択・ぬりえ選択)は、キャンバス・パレット・
-   道具を出さず、ホーム同様にサムネイル一覧だけを画面いっぱいに見せる。
-   塗り絵を選んで初めてキャンバスと道具が現れる。全サイズ共通。 */
-.app-container.no-artwork .coloring-canvas,
-.app-container.no-artwork .color-palette,
-.app-container.no-artwork .toolbar {
-  display: none;
-}
-
-.app-container.no-artwork .drawing-selector {
-  flex: 1 1 auto;
-  max-height: none;
-}
-
-/* 一覧は中央寄せで適度な幅に(ホーム画面と同じ見え方)。
-   モバイルではビューポートより広いので実質全幅のまま。 */
-.app-container.no-artwork .selector-container {
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-/* 狭い画面では左上固定の「ぽーたるへ」リンク(index.html)が一覧の
-   「もどる」ボタンに重なるため、一覧表示時は先頭に逃げしろを取る */
-@media (max-width: 980px) {
-  .app-container.no-artwork .selector-container {
-    padding-top: 40px;
-  }
-}
-
-/* たたんだ状態: トグルだけ残してメニュー本体を隠し、キャンバスを最大化 */
-.drawing-selector.collapsed {
-  max-height: none;
-  overflow-y: visible;
-}
-
-.drawing-selector.collapsed .selector-body {
-  display: none;
-}
-
-.selector-toggle {
-  flex-shrink: 0;
-  width: 100%;
-  min-height: 40px;
-  padding: 8px 14px;
-  font-size: 1em;
-  font-weight: bold;
-  color: #d6336c;
-  background-color: #ffe1ef;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.selector-toggle:active {
-  background-color: #ffd0e4;
-}
-
 /* --- Tablet/Desktop Styles (横向き) --- */
 @media (min-width: 768px) and (orientation: landscape) {
   .app-container {
     display: grid;
-    /* 左:絵柄えらび / 中央:キャンバス+下部ツールバー / 右:パレット専用レール。
-       ツールを下部バーに寄せ、右レールは36色+キラキラを3列で全部見せる。 */
-    grid-template-columns: 168px 1fr 178px;
+    /* 中央:キャンバス+下部ツールバー / 右:パレット専用レール。 */
+    grid-template-columns: 1fr 178px;
     grid-template-rows: 1fr auto;
     grid-template-areas:
-      "selector canvas palette"
-      "selector tools palette";
+      "canvas palette"
+      "tools palette";
     height: 100dvh;
     max-width: 1366px;
     margin: auto;
@@ -142,35 +74,6 @@
     padding: 20px;
     border-left: 2px solid #ffe1ef;
     border-right: 2px solid #ffe1ef;
-  }
-
-  /* 横向き/PCでも、未選択時はサイドレールをやめてサムネイル一覧を全幅表示にする */
-  .app-container.no-artwork {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    grid-template-areas: 'selector';
-  }
-
-  .drawing-selector {
-    grid-area: selector;
-    flex-direction: column;
-    align-items: stretch;
-    border: none;
-    box-shadow: none;
-    max-height: none; /* サイドレールでは縦いっぱい使える */
-    overflow-y: auto;
-    overflow-x: hidden;
-    gap: 14px;
-    padding: 18px 14px;
-  }
-
-  /* 横向きのサイドレールではトグル不要・常に展開 */
-  .selector-toggle {
-    display: none;
-  }
-
-  .drawing-selector.collapsed .selector-body {
-    display: block;
   }
 
   .toolbar {
@@ -202,12 +105,10 @@
 /* iPad-first workbench: the picture, colors, and tools each get a dedicated
    place so children can keep their attention on the canvas. */
 .app-container { background:radial-gradient(#f2e7ee 1px,transparent 1px),linear-gradient(135deg,#fff9fc,#f2fbff); background-size:17px 17px,auto; }
-.drawing-selector,.color-palette,.toolbar { background:rgba(255,255,255,.94); }
-.selector-toggle { color:#a45073; background:#fff0f6; }
+.color-palette,.toolbar { background:rgba(255,255,255,.94); }
 .coloring-canvas { background:transparent; }
 @media (min-width:768px) and (orientation:landscape) {
-  .app-container { grid-template-columns:174px 1fr 184px; grid-template-rows:1fr auto; max-width:1024px; border-radius:0; box-shadow:none; }
-  .drawing-selector { padding:18px 13px; background:#fffafd; }
+  .app-container { grid-template-columns:1fr 184px; grid-template-rows:1fr auto; max-width:1024px; border-radius:0; box-shadow:none; }
   .color-palette { padding:16px 14px; background:#fbfdff; }
   .coloring-canvas { padding:22px 28px 96px; }
   .toolbar { margin:0; padding:10px 16px 16px; background:transparent; border:0; }
@@ -227,9 +128,6 @@
   .coloring-canvas::after { content:''; position:absolute; z-index:4; top:4px; left:61px; width:10px; height:29px; pointer-events:none; border:3px solid #bfc2c9; border-bottom:0; border-radius:9px 9px 0 0; transform:rotate(-5deg); }
   .coloring-canvas .image-stage--paper,
   .coloring-canvas > .free-stage { overflow:hidden; border:7px solid #80c6e7; border-radius:32px; background:#fffefb; box-shadow:0 8px 0 #d5aa8d,0 14px 28px rgba(104,77,65,.2); }
-  .drawing-selector { position:relative; overflow:hidden; background:linear-gradient(90deg,#f6d3da 0 18px,#fff2f5 18px); }
-  .drawing-selector::before { content:''; position:absolute; top:18px; left:5px; bottom:18px; width:10px; background:radial-gradient(circle,#f0aaad 0 3px,transparent 4px) center / 10px 22px repeat-y; opacity:.8; }
-  .drawing-selector .selector-container { padding-left:12px; }
   .color-palette { position:relative; background:linear-gradient(90deg,#f3e2c8,#fff9eb 22%,#fffdf5); box-shadow:inset 2px 0 rgba(166,122,75,.12); }
   .color-palette::after { display:none; }
   .color-palette::before { margin-top:18px; }

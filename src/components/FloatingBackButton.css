@@ -1,0 +1,39 @@
+.floating-back-button {
+  position: fixed;
+  z-index: 20;
+  top: max(12px, calc(env(safe-area-inset-top) + 8px));
+  left: max(12px, calc(env(safe-area-inset-left) + 12px));
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 15px;
+  color: #625867;
+  background: rgba(255, 253, 255, .96);
+  box-shadow: 0 3px 0 rgba(96, 78, 108, .18), 0 7px 16px rgba(96, 78, 108, .1);
+  cursor: pointer;
+  font: 800 14px inherit;
+}
+
+.floating-back-button:focus-visible {
+  outline: 3px solid #7cc8e9;
+  outline-offset: 3px;
+}
+
+.floating-back-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(96, 78, 108, .18), 0 4px 10px rgba(96, 78, 108, .1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .floating-back-button:hover {
+    background: #fff;
+  }
+}
+
+@media (max-width: 767px), (orientation: portrait) {
+  .floating-back-button {
+    min-height: 42px;
+    padding: 7px 11px;
+    font-size: 13px;
+  }
+}

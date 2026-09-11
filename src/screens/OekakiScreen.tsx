@@ -3,8 +3,7 @@ import '../App.css';
 import '../components/DrawingSelector.css';
 import ColorPalette from '../components/ColorPalette';
 import ColoringCanvas from '../components/ColoringCanvas';
-import ImageColoringCanvas from '../components/ImageColoringCanvas';
-import ImageUploadButton from '../components/ImageUploadButton';
+import FloatingBackButton from '../components/FloatingBackButton';
 import Toolbar from '../components/Toolbar';
 import { CanvasHandle, Paint, Tool } from '../types';
 
@@ -15,63 +14,21 @@ interface OekakiScreenProps {
 const OekakiScreen: React.FC<OekakiScreenProps> = ({ onBackHome }) => {
   const [paint, setPaint] = useState<Paint>({ color: '#E60012', glitter: false });
   const [tool, setTool] = useState<Tool>('brush');
-  const [loadedImage, setLoadedImage] = useState<string | null>(null);
-  // スマホ縦で上部メニューをたたんでキャンバスを広げられるように
-  const [menuOpen, setMenuOpen] = useState(true);
 
   const canvasRef = useRef<CanvasHandle>(null);
 
-  const handleUpload = (dataUrl: string) => {
-    setLoadedImage(dataUrl);
-    setTool('bucket'); // 線画を読みこんだらぬりえ側と同じくバケツを既定に
-    setMenuOpen(false); // 読みこんだら自動でたたんで描くスペースを広げる
-  };
-
-  const handleBlank = () => {
-    setLoadedImage(null);
-    setTool('brush'); // bucket is only meaningful on a loaded line drawing
-  };
-
   return (
-    <div className="app-container">
-      <aside className={`drawing-selector ${menuOpen ? '' : 'collapsed'}`}>
-        <button
-          className="selector-toggle"
-          onClick={() => setMenuOpen(open => !open)}
-          aria-expanded={menuOpen}
-        >
-          {menuOpen ? '▲ メニューをとじる' : '▼ メニューをひらく'}
-        </button>
-        <div className="selector-body">
-          <div className="selector-container">
-            <button className="back-button" onClick={onBackHome}>
-              ← ホームにもどる
-            </button>
-            <h2>じゆうに おえかき</h2>
-            {loadedImage && (
-              <button className="back-button" onClick={handleBlank}>
-                しろがみにする
-              </button>
-            )}
-            <hr className="divider" />
-            {/* Load a black-line drawing to color in (stays inside the lines). */}
-            <ImageUploadButton onImageUpload={handleUpload} />
-          </div>
-        </div>
-      </aside>
+    <div className="app-container oekaki-workspace">
+      <FloatingBackButton onClick={onBackHome} />
       <main className="coloring-canvas">
-        {loadedImage ? (
-          <ImageColoringCanvas key={loadedImage} ref={canvasRef} tool={tool} paint={paint} image={loadedImage} />
-        ) : (
-          <ColoringCanvas ref={canvasRef} tool={tool} paint={paint} />
-        )}
+        <ColoringCanvas ref={canvasRef} tool={tool} paint={paint} />
       </main>
       <aside className="color-palette">
         <ColorPalette paint={paint} onPaintChange={setPaint} />
       </aside>
       <footer className="toolbar">
         <Toolbar
-          tools={loadedImage ? ['bucket', 'brush', 'paintbrush', 'eraser'] : ['brush', 'paintbrush', 'eraser']}
+          tools={['brush', 'paintbrush', 'eraser']}
           currentTool={tool}
           onToolChange={setTool}
           onUndo={() => canvasRef.current?.undo()}

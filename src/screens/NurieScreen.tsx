@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import '../App.css';
 import '../components/DrawingSelector.css';
 import ColorPalette from '../components/ColorPalette';
+import FloatingBackButton from '../components/FloatingBackButton';
 import ImageColoringCanvas from '../components/ImageColoringCanvas';
 import Toolbar from '../components/Toolbar';
 import { themes } from '../coloring/artworks';
@@ -42,13 +43,8 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   if (!selectedTheme) {
     return (
       <section className="nurie-picker-page nurie-theme-page" aria-label="テーマをえらぶ">
-        <header className="nurie-picker-header">
-          <button type="button" className="nurie-back-button" onClick={onBackHome}>← あそびをえらぶ</button>
-          <h1>ぬりえ</h1>
-        </header>
+        <FloatingBackButton onClick={onBackHome} />
         <main className="nurie-picker-main">
-          <h2>どれで あそぶ？</h2>
-          <p>すきな えを ひとつ おしてね</p>
           <div className="theme-card-grid">
             {themes.map(theme => (
               <button
@@ -71,12 +67,8 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   if (!selectedArtwork) {
     return (
       <section className="nurie-picker-page nurie-artwork-page" aria-label={`${selectedTheme.name}のぬりえをえらぶ`}>
-        <header className="nurie-picker-header">
-          <button type="button" className="nurie-back-button" onClick={() => setSelectedTheme(null)}>← テーマをえらぶ</button>
-          <h1>{selectedTheme.name}の ぬりえ</h1>
-        </header>
+        <FloatingBackButton onClick={() => setSelectedTheme(null)} />
         <main className="nurie-picker-main">
-          <h2>すきな えを おしてね</h2>
           <div className="artwork-card-grid">
             {selectedTheme.artworks.map(artwork => (
               <button key={artwork.id} type="button" className="artwork-picture-card" onClick={() => selectArtwork(artwork)}>
@@ -92,8 +84,8 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
 
   return (
     <div className="app-container nurie-workspace">
+      {!completeOpen && <FloatingBackButton onClick={() => setSelectedArtwork(null)} />}
       <main className="coloring-canvas">
-        <button type="button" className="canvas-picker-back" onClick={() => setSelectedArtwork(null)}>← えをえらぶ</button>
         <div className="canvas-stage-wrapper">
           <ImageColoringCanvas
             key={selectedArtwork.id}
