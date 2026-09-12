@@ -13,6 +13,9 @@ interface MobileLandscapeControlsProps {
   onToolChange: (tool: Tool) => void;
   onUndo: () => void;
   onClear: () => void;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onResetZoom: () => void;
   onComplete: () => void;
 }
 
@@ -32,6 +35,9 @@ const MobileLandscapeControls: React.FC<MobileLandscapeControlsProps> = ({
   onToolChange,
   onUndo,
   onClear,
+  onZoomIn,
+  onZoomOut,
+  onResetZoom,
   onComplete,
 }) => {
   const selectTool = (nextTool: Tool) => {
@@ -88,6 +94,9 @@ const MobileLandscapeControls: React.FC<MobileLandscapeControlsProps> = ({
                 <button type="button" onClick={onUndo}>↩ もどす</button>
                 <button type="button" onClick={onClear}>🗑️ ぜんぶけす</button>
                 <button type="button" className="mobile-sheet-complete" onClick={onComplete}>★ できた！</button>
+                <button type="button" aria-label="ちいさくする" onClick={onZoomOut}>−</button>
+                <button type="button" aria-label="ぜんたいをみる" onClick={onResetZoom}>ぜんたい</button>
+                <button type="button" aria-label="おおきくする" onClick={onZoomIn}>＋</button>
               </div>
             </>
           )}

@@ -141,6 +141,9 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
           onToolChange={setTool}
           onUndo={() => canvasRef.current?.undo()}
           onClear={() => canvasRef.current?.clear()}
+          onZoomIn={() => canvasRef.current?.zoomIn()}
+          onZoomOut={() => canvasRef.current?.zoomOut()}
+          onResetZoom={() => canvasRef.current?.resetZoom()}
           onComplete={() => { setMobilePanel(null); setCompleteOpen(true); }}
         />
       )}

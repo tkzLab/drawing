@@ -14,7 +14,7 @@
   .mobile-tool-button { display: grid; place-items: center; gap: 2px; min-height: 67px; border: 2px solid transparent; border-radius: 16px; color: #514962; background: #fff; font: 800 11px inherit; cursor: pointer; }
   .mobile-tool-button > span:first-child { font-size: 25px; line-height: 1; }
   .mobile-tool-button.is-current { border-color: #f46f9b; background: #fff2f6; box-shadow: 0 3px 0 #df4d81; }
-  .mobile-sheet-actions { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
+  .mobile-sheet-actions { display: grid; grid-template-columns: repeat(3, minmax(0, max-content)); justify-content: center; gap: 6px 8px; margin-top: 8px; }
   .mobile-sheet-actions button { min-height: 30px; padding: 4px 10px; border: 0; border-radius: 15px; color: #675b70; background: #f3f0f5; font: 800 10px inherit; cursor: pointer; white-space: nowrap; }
   .mobile-sheet-actions .mobile-sheet-complete { color: #885108; background: linear-gradient(135deg, #fff8d9, #ffe390); box-shadow: 0 2px 0 #d7a039; }
   .mobile-color-list { display: flex; gap: 9px; max-width: 100%; padding-top: 13px; overflow-x: auto; overflow-y: hidden; overscroll-behavior: contain; touch-action: pan-x; -webkit-overflow-scrolling: touch; }
