@@ -65,6 +65,7 @@ export const themes: Theme[] = [
       { id: 'sunglasses-cat', name: 'サングラスねこ', image: img('sunglasses-cat.png') },
       { id: 'raccoon-dog', name: 'たぬき', image: img('raccoon-dog.png') },
       { id: 'penguin', name: 'ペンギン', image: img('penguin.png') },
+      { id: 'bow-tie-penguin', name: 'ちょうネクタイぺんぎん', image: img('bow-tie-penguin.png') },
       { id: 'elephant', name: 'ぞう', image: img('elephant.png') },
       { id: 'butterfly', name: 'ちょうちょ', image: img('butterfly.png') },
       { id: 'fuwafuwa-usagi', name: 'ふわふわうさぎ', image: img('fuwafuwa-usagi.jpg') },
