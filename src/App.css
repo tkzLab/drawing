@@ -51,12 +51,17 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* iPhone landscape has a wide physical screen but fewer than 768 CSS pixels.
-   Keep the paper primary and move colors/tools into an on-demand control sheet. */
-@media (max-width: 767px) and (orientation: landscape) and (max-height: 500px) {
+/* Phones use one focused interaction model in either orientation: the paper is
+   primary and colors/tools open only when asked for. */
+@media (max-width: 767px) {
   .nurie-workspace .color-palette,
   .nurie-workspace .toolbar { display: none; }
   .nurie-workspace .coloring-canvas { padding: 8px; }
+  .nurie-workspace .coloring-canvas .image-stage--paper {
+    width: min(100%, calc(100dvh - 16px));
+    height: auto;
+    aspect-ratio: 1;
+  }
   .nurie-workspace .floating-back-button { z-index: 25; }
 }
 
