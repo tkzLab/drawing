@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import '../App.css';
 import '../components/DrawingSelector.css';
 import ColorPalette from '../components/ColorPalette';
@@ -22,6 +22,18 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   const [mobilePanel, setMobilePanel] = useState<'colors' | 'tools' | null>(null);
   const [, bumpThumbs] = useState(0);
   const canvasRef = useRef<CanvasHandle>(null);
+
+  // The child is drawing, not scrolling the document. Lock only the actual
+  // coloring workspace; category and picture pickers retain normal scrolling.
+  useEffect(() => {
+    if (!selectedArtwork) return;
+    document.documentElement.classList.add('is-coloring');
+    document.body.classList.add('is-coloring');
+    return () => {
+      document.documentElement.classList.remove('is-coloring');
+      document.body.classList.remove('is-coloring');
+    };
+  }, [selectedArtwork]);
 
   const thumbSrc = (image: string | undefined) => {
     if (!image) return image;

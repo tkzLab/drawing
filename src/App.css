@@ -7,6 +7,11 @@
   background: linear-gradient(160deg, #fff7fb 0%, #f3f9ff 100%);
 }
 
+.nurie-workspace {
+  position: fixed;
+  inset: 0;
+}
+
 .coloring-canvas {
   flex: 1 1 auto; /* 残りの高さをすべて使ってキャンバスを最大化 */
   min-height: 0;  /* flex 子が縮めるように(はみ出し防止) */

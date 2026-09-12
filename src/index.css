@@ -26,6 +26,21 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Lock only while a coloring canvas is open. This removes page scrolling and
+   iOS rubber-band movement without blocking the picker screens or horizontal
+   color scrolling inside the on-demand mobile sheet. */
+html.is-coloring,
+body.is-coloring {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body.is-coloring {
+  position: fixed;
+  inset: 0;
+}
+
 /* テキスト選択でじゃまにならないように(入力系は除く) */
 button {
   font-family: inherit;
