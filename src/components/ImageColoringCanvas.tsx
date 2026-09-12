@@ -111,7 +111,7 @@ const ImageColoringCanvas = forwardRef<CanvasHandle, ImageColoringCanvasProps>(
     };
 
     return (
-      <div className="image-stage-viewport">
+      <div className="image-stage-viewport" onContextMenu={(event) => event.preventDefault()}>
         <div
           ref={stageRef}
           className="image-stage image-stage--paper"
@@ -120,13 +120,14 @@ const ImageColoringCanvas = forwardRef<CanvasHandle, ImageColoringCanvasProps>(
           <canvas
             ref={colorRef}
             className="image-layer image-layer--color"
+            draggable={false}
             onPointerDown={onCanvasPointerDown}
             onPointerMove={onCanvasPointerMove}
             onPointerUp={onCanvasPointerUp}
             onPointerLeave={onCanvasPointerUp}
             onPointerCancel={onCanvasPointerUp}
           />
-          <canvas ref={lineRef} className="image-layer image-layer--line" />
+          <canvas ref={lineRef} className="image-layer image-layer--line" draggable={false} />
         </div>
       </div>
     );
