@@ -4,6 +4,7 @@ import '../components/DrawingSelector.css';
 import ColorPalette from '../components/ColorPalette';
 import FloatingBackButton from '../components/FloatingBackButton';
 import ImageColoringCanvas from '../components/ImageColoringCanvas';
+import MobileLandscapeControls from '../components/MobileLandscapeControls';
 import Toolbar from '../components/Toolbar';
 import { themes } from '../coloring/artworks';
 import { Artwork, CanvasHandle, Paint, Theme, Tool } from '../types';
@@ -18,6 +19,7 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   const [completeOpen, setCompleteOpen] = useState(false);
   const [paint, setPaint] = useState<Paint>({ color: '#E60012', glitter: false });
   const [tool, setTool] = useState<Tool>('bucket');
+  const [mobilePanel, setMobilePanel] = useState<'colors' | 'tools' | null>(null);
   const [, bumpThumbs] = useState(0);
   const canvasRef = useRef<CanvasHandle>(null);
 
@@ -36,6 +38,7 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
   const selectArtwork = (artwork: Artwork) => {
     setSelectedArtwork(artwork);
     setTool('bucket');
+    setMobilePanel(null);
   };
 
   const chooseNextArtwork = () => {
@@ -116,6 +119,19 @@ const NurieScreen: React.FC<NurieScreenProps> = ({ onBackHome }) => {
           onComplete={() => setCompleteOpen(true)}
         />
       </footer>
+      {!completeOpen && (
+        <MobileLandscapeControls
+          panel={mobilePanel}
+          paint={paint}
+          tool={tool}
+          onPanelChange={setMobilePanel}
+          onPaintChange={setPaint}
+          onToolChange={setTool}
+          onUndo={() => canvasRef.current?.undo()}
+          onClear={() => canvasRef.current?.clear()}
+          onComplete={() => { setMobilePanel(null); setCompleteOpen(true); }}
+        />
+      )}
       {completeOpen && (
         <section className="complete-overlay" role="dialog" aria-modal="true" aria-labelledby="complete-title">
           <div className="complete-popup">

@@ -51,6 +51,15 @@
   -webkit-overflow-scrolling: touch;
 }
 
+/* iPhone landscape has a wide physical screen but fewer than 768 CSS pixels.
+   Keep the paper primary and move colors/tools into an on-demand control sheet. */
+@media (max-width: 767px) and (orientation: landscape) and (max-height: 500px) {
+  .nurie-workspace .color-palette,
+  .nurie-workspace .toolbar { display: none; }
+  .nurie-workspace .coloring-canvas { padding: 8px; }
+  .nurie-workspace .floating-back-button { z-index: 25; }
+}
+
 /* --- Tablet/Desktop Styles (横向き) --- */
 @media (min-width: 768px) and (orientation: landscape) {
   .app-container {
